@@ -3,7 +3,10 @@
 #include <algorithm>
 #include <limits.h>
 #include <utility>
-#define p 9 
+#define p 9
+
+/* ******** INCOMPLETE ********  */
+
 using namespace std;
 
 class bloque{
