@@ -46,7 +46,7 @@ pair<vector<Tupla>, double> min_peso_bloques(int r , int s, int i, int j){
         vector<Tupla> matchsk;
         vector<Tupla> matchsl;
 
-        for(int k = j-1; k >=i ; k--){
+        for(int k = i; k <= j-1 ; k++){
             auto aux_leftk = min_peso_bloques(r, r, i, k);
             auto aux_rightk = min_peso_bloques(r+1, s, k+1, j);
             resultk  = aux_leftk.second + aux_rightk.second;
@@ -60,7 +60,7 @@ pair<vector<Tupla>, double> min_peso_bloques(int r , int s, int i, int j){
         matchsk.insert( matchsk.begin(), begin(leftk.first), end(leftk.first) );
         matchsk.insert( matchsk.end(), begin(rightk.first), end(rightk.first) );
 
-        for(int l = s-1; l >= r ; l--) {
+        for(int l = r; l <= s-1 ; l++) {
             auto aux_leftl = min_peso_bloques(r, l, i, i);
             auto aux_rightl = min_peso_bloques(l + 1, s, i + 1, j);
             resultl = aux_leftl.second + aux_rightl.second;
@@ -89,8 +89,8 @@ pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
 
 int main() {
   
-    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0};
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
+    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
     
     auto result = MIN_MATCHING(a,b);
 

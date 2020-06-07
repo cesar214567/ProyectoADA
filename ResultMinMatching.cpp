@@ -23,14 +23,14 @@ double min_peso_bloques(int r , int s, int i, int j){
         double min_resultk = INT16_MAX;
         double min_resultl = INT16_MAX;
 
-        for(int k = j-1; k >=i ; k--){
+        for(int k = i; k <= j-1 ; k++){
             auto left = min_peso_bloques(r, r, i, k);
             auto rigth = min_peso_bloques(r+1, s, k+1, j);
             auto res1  = left + rigth;
             if (min_resultk > res1)
                 min_resultk = res1;
         }
-        for(int l = s-1; l >= r ; l--) {
+        for(int l = r; l <= s-1 ; l++) {
             auto left = min_peso_bloques(r, l, i, i);
             auto rigth = min_peso_bloques(l + 1, s, i + 1, j);
             auto res2 = left + rigth;
@@ -50,8 +50,8 @@ double MIN_MATCHING(vector<int> a, vector<int> b){
 
 
 int main() {
-	vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0};
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
+	vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
     
     auto result = MIN_MATCHING(a,b);
 
