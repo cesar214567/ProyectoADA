@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <limits.h>
 #include <utility>
-#define p 9 
 
 #include "Useful.cpp"
 
