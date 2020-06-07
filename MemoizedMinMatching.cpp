@@ -33,10 +33,10 @@ pair<vector<Tupla>, double> min_peso_bloques(int r,int s,int i,int j){
             cuadB[i][r][s].second=0;
             for(int m = r; m <= s; m++) {
                 cuadB[i][r][s].first.emplace_back( m, i );
-                cuadB[i][r][s].second += B[m].longitud;
+                cuadB[i][r][s].second += A[m].longitud;
             }
         }
-        return make_pair ( cuadB[i][r][s].first , A[r].longitud/cuadB[i][r][s].second );
+        return make_pair ( cuadB[i][r][s].first , cuadB[i][r][s].second/B[i].longitud );
     }
     else{
 		
