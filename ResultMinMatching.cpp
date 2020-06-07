@@ -2,16 +2,10 @@
 #include <vector>
 #include <algorithm>
 #include <limits.h>
+
+#include "Useful.cpp"
+
 using namespace std;
-
-class bloque{
-public:
-    int longitud;
-    bloque(int l): longitud{l}{}
-};
-
-//A = [ 0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 1 , 0]
-//B = [ 0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1]
 
 vector<bloque> A;
 vector<bloque> B;
@@ -47,16 +41,19 @@ double min_peso_bloques(int r , int s, int i, int j){
     }
 }
 
+double MIN_MATCHING(vector<int> a, vector<int> b){
+  ObtenerBloques(A,a);
+  ObtenerBloques(B,b);
+  
+  return min_peso_bloques( 0,A.size()-1, 0,B.size()-1) ;
+}
+
 
 int main() {
-    A.emplace_back(bloque(1));
-    A.emplace_back(bloque(2));
-    A.emplace_back(bloque(1));
-    //A.emplace_back(bloque(7));
-    //A.emplace_back(bloque(3));
-    //A.emplace_back(bloque(6));
-    B.emplace_back(bloque(2));
-    B.emplace_back(bloque(2));
-    B.emplace_back(bloque(1));
-    cout << "Optimo: " <<endl <<min_peso_bloques(0,A.size()-1, 0,B.size()-1);
+	vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0};
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
+    
+    auto result = MIN_MATCHING(a,b);
+
+    cout << "Optimo: " << result << endl;
 }

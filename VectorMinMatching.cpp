@@ -4,29 +4,10 @@
 #include <limits.h>
 #include <utility>
 #define p 9 
+
+#include "Useful.cpp"
+
 using namespace std;
-
-class bloque{
-public:
-    int longitud;
-    int start;
-    int end;
-    bloque(int start_,int end_, int longitud_):start{start_}, end{end_},longitud{longitud_}{} 
-    bloque(int l): longitud{l}{}
-};
-
-class Tupla{
-public:
-    int first;
-    int second;
-    Tupla(int first, int second){
-        this->first = first;
-        this->second = second;
-    }
-};
-
-//A = [ 0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 1]
-//B = [ 0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1]
 
 vector<bloque> A;
 vector<bloque> B;
@@ -100,48 +81,17 @@ pair<vector<Tupla>, double> min_peso_bloques(int r , int s, int i, int j){
 
     }
 }
-pair<vector<Tupla>, double> MIN_MATCHING(int a[], int b[]){
-  //A={0 1 1 1 0 0 1 1 }
-  int cont= 0; 
-  bool c = false; 
-  for(int i = 0; i < p ; i++){
-    if(a[i]){
-      cont++;
-      c = true;
-      if(i == p-1){
-        A.emplace_back(bloque(i-cont+1,i,cont));  
-      }
-    }
-    else if(cont){
-      A.emplace_back(bloque(i-cont,i-1,cont));
-      cont = 0;
-      c = false;
-    } 
-    
-  }
-  cont= 0; 
-  c = false; 
-  for(int i = 0; i < p ; i++){
-    if(b[i]){
-      cont++;
-      c = true;
-      if(i == p-1){
-        B.emplace_back(bloque(i-cont+1,i,cont));  
-      }
-    }
-    else if(cont){
-      B.emplace_back(bloque(i-cont,i-1,cont));
-      cont = 0;
-      c = false;
-    }   
-  }
+pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
+  ObtenerBloques(A,a);
+  ObtenerBloques(B,b);
+  
   return min_peso_bloques(0,A.size()-1, 0,B.size()-1) ;
 }
 
 int main() {
   
-    int a[p]={0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0};
-    int b[p]={0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
+    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0};
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
     
     auto result = MIN_MATCHING(a,b);
 
@@ -150,5 +100,4 @@ int main() {
         cout<<"("<<v.first<<","<<v.second<<") ";
     }
   
-    
 }
