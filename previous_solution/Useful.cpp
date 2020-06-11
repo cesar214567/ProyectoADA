@@ -19,16 +19,17 @@ public:
     }
 };
 
-void ObtenerBloques(vector<bloque>& v, vector<int>& array){
-	int cont= 0;
+void ObtenerBloques(vector<bloque>& v, vector<int> array){
+	int cont= 0; 
+	bool c = false; 
 	for(int i = 0; i < array.size() ; i++){
 		if(array[i]){
-			cont++;
+			cont++; c = true;
 			if(i == array.size()-1) v.emplace_back(bloque(i-cont+1,i,cont));  
 		}
 		else if(cont){
 			v.emplace_back(bloque(i-cont,i-1,cont));
-			cont = 0;
+			cont = 0; c = false;
 		} 
 	}
 }

@@ -88,9 +88,9 @@ pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
 }
 
 int main() {
-  
-    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
+
+    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
     
     auto result = MIN_MATCHING(a,b);
 
@@ -98,5 +98,6 @@ int main() {
     for(auto v : result.first){
         cout<<"("<<v.first<<","<<v.second<<") ";
     }
+    cout<<endl;
   
 }
