@@ -10,32 +10,44 @@ using namespace std;
 vector<bloque> A;
 vector<bloque> B;
 
-double min_peso_bloques(int r , int s, int i, int j){
-    if ( r == s || i == j){
-        double sumBloquesA = 0.0;
-        double sumBloquesB = 0.0;
+double GetWeightMatchDivision(int i, int m, int n){
+	double suma = 0.0;
+	for(int p = m; p <= n; p++){
+		suma += B[p].longitud;
+	}
+	return A[i].longitud/suma;
+}
+double GetWeightMatchGroup(int r, int s, int j){
+	double suma = 0.0;
+	for(int p = r; p <= s; p++){
+		suma += A[p].longitud;
+	}
+	return suma/B[j].longitud;
+}
 
-        for(int m = r; m <= s; m++) sumBloquesA += A[m].longitud;
-        for(int m = i; m <= j; m++) sumBloquesB += B[m].longitud;
 
-        return (sumBloquesA/sumBloquesB);
+double min_peso_bloques(int i, int j){
+    if ( i == 0 ){ 
+		return GetWeightMatchDivision(i,0,j);
+    }else if ( j == 0 ){ 
+		return GetWeightMatchGroup(0,i,j);
     }else{
         double min_resultk = INT16_MAX;
         double min_resultl = INT16_MAX;
 
-        for(int k = i; k <= j-1 ; k++){
-            auto left = min_peso_bloques(r, r, i, k);
-            auto rigth = min_peso_bloques(r+1, s, k+1, j);
-            auto res1  = left + rigth;
-            if (min_resultk > res1)
-                min_resultk = res1;
+        for(int k = i-1; k >= 0 ; k--){
+            double WeightMatch = GetWeightMatchGroup(k+1,i,j);
+            double SubProblem = min_peso_bloques(k,j-1);
+            double result  = WeightMatch + SubProblem;
+            if (min_resultk > result)
+                min_resultk = result;
         }
-        for(int l = r; l <= s-1 ; l++) {
-            auto left = min_peso_bloques(r, l, i, i);
-            auto rigth = min_peso_bloques(l + 1, s, i + 1, j);
-            auto res2 = left + rigth;
-            if (min_resultl > res2)
-                min_resultl = res2;
+        for(int l = j-1; l >= 0 ; l--) {
+            double WeightMatch = GetWeightMatchDivision(i,l+1,j);
+            double SubProblem = min_peso_bloques(i-1,l);
+            double result = WeightMatch + SubProblem;
+            if (min_resultl > result)
+                min_resultl = result;
         }
         return min(min_resultk,min_resultl);
     }
@@ -45,7 +57,7 @@ double MIN_MATCHING(vector<int> a, vector<int> b){
   ObtenerBloques(A,a);
   ObtenerBloques(B,b);
   
-  return min_peso_bloques( 0,A.size()-1, 0,B.size()-1) ;
+  return min_peso_bloques( A.size()-1, B.size()-1 ) ;
 }
 
 

@@ -11,87 +11,90 @@ using namespace std;
 vector<bloque> A;
 vector<bloque> B;
 
-pair<vector<Tupla>, double> min_peso_bloques(int r , int s, int i, int j){
-    if ( r == s ){
-        vector<Tupla> matchs;
-        double suma = 0.0;
+pair<vector<Tupla>, double> GetMatchDivision(int i, int m, int n){
+	vector<Tupla> matchs;
+	double suma = 0.0;
+	for(int p = m; p <= n; p++){
+		matchs.emplace_back(i,p);
+		suma += B[p].longitud;
+	}
+	return make_pair(matchs, A[i].longitud/suma);
+}
+pair<vector<Tupla>, double> GetMatchGroup(int r, int s, int j){
+	vector<Tupla> matchs;
+	double suma = 0.0;
+	for(int p = r; p <= s; p++){
+		matchs.emplace_back(p,j);
+		suma += A[p].longitud;
+	}
+	return make_pair(matchs, suma/B[j].longitud);
+}
 
-        for(int m = i; m <= j; m++) {
-            matchs.emplace_back( r, m );
-            suma += B[m].longitud;
-        }
-        return make_pair ( matchs , A[r].longitud/suma );
+pair<vector<Tupla>, double> min_peso_bloques(int i, int j){
+    if ( i == 0 ){
+        return GetMatchDivision(i,0,j);
 
-    }else if ( i == j ){
-        vector<Tupla> matchs;
-        double suma = 0.0;
-
-        for(int m = r; m <= s; m++) {
-            matchs.emplace_back( m, i );
-            suma += A[m].longitud;
-        }
-        return make_pair ( matchs , suma/B[i].longitud );
-    } else{
+    }else if ( j == 0 ){
+        return GetMatchGroup(0,i,j);
+    }else{
         double min_resultk = INT16_MAX;
         double min_resultl = INT16_MAX;
 
-        double resultk, resultl;
+        pair<vector<Tupla>,double> Matchk;
+        pair<vector<Tupla>,double> SubProblemk;
 
-        pair<vector<Tupla>,double> leftk;
-        pair<vector<Tupla>,double> rightk;
-
-        pair<vector<Tupla>,double> leftl;
-        pair<vector<Tupla>,double> rightl;
+        pair<vector<Tupla>,double> Matchl;
+        pair<vector<Tupla>,double> SubProbleml;
 
         vector<Tupla> matchsk;
         vector<Tupla> matchsl;
 
-        for(int k = i; k <= j-1 ; k++){
-            auto aux_leftk = min_peso_bloques(r, r, i, k);
-            auto aux_rightk = min_peso_bloques(r+1, s, k+1, j);
-            resultk  = aux_leftk.second + aux_rightk.second;
-            if (min_resultk > resultk ) {
-                min_resultk = resultk;
-                leftk = aux_leftk;
-                rightk = aux_rightk;
+        for(int k = i-1; k >= 0 ; k--){
+            auto Match = GetMatchGroup(k+1,i,j);
+            auto SubProblem = min_peso_bloques(k,j-1);
+            auto result  = SubProblem.second + Match.second;
+            if (min_resultk > result ) {
+                min_resultk = result;
+                Matchk = Match;
+                SubProblemk = SubProblem;
             }
         }
 
-        matchsk.insert( matchsk.begin(), begin(leftk.first), end(leftk.first) );
-        matchsk.insert( matchsk.end(), begin(rightk.first), end(rightk.first) );
+        matchsk.insert( matchsk.begin(), begin(SubProblemk.first), end(SubProblemk.first) );
+        matchsk.insert( matchsk.end(), begin(Matchk.first), end(Matchk.first) );
 
-        for(int l = r; l <= s-1 ; l++) {
-            auto aux_leftl = min_peso_bloques(r, l, i, i);
-            auto aux_rightl = min_peso_bloques(l + 1, s, i + 1, j);
-            resultl = aux_leftl.second + aux_rightl.second;
+        for(int l = j-1; l >= 0 ; l--){
+            auto Match = GetMatchDivision(i,l+1,j);
+            auto SubProblem =  min_peso_bloques(i-1,l);
+            auto result = SubProblem.second + Match.second;
             
-            if (min_resultl > resultl) {
-                min_resultl = resultl;
-                leftl = aux_leftl;
-                rightl = aux_rightl;
+            if (min_resultl > result) {
+                min_resultl = result;
+                Matchl = Match;
+                SubProbleml = SubProblem;
             }
         }
 
-        matchsl.insert( matchsl.begin(), begin(leftl.first), end(leftl.first) );
-        matchsl.insert( matchsl.end(), begin(rightl.first), end(rightl.first) );
+        matchsl.insert( matchsl.begin(), begin(SubProbleml.first), end(SubProbleml.first) );
+        matchsl.insert( matchsl.end(), begin(Matchl.first), end(Matchl.first) );
 
         if( min_resultk > min_resultl ) return make_pair( matchsl , min_resultl );
         else return make_pair( matchsk , min_resultk );
-
     }
 }
 pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
   ObtenerBloques(A,a);
   ObtenerBloques(B,b);
   
-  return min_peso_bloques(0,A.size()-1, 0,B.size()-1) ;
+  return min_peso_bloques( A.size()-1, B.size()-1 ) ;
 }
 
 int main() {
 
-    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
-    
+    //vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
+    //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
+    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
+    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
     auto result = MIN_MATCHING(a,b);
 
     cout << "Optimo: " << result.second << endl;
