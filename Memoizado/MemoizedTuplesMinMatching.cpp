@@ -1,79 +1,89 @@
-
-
 #include "../Useful.cpp"
 
-vector<vector<pair<double,vector<Tupla>>>> Matrix;
+vector<vector< pair<vector<Tupla>,double> >> Matrix;
 
 vector<bloque> A;
 vector<bloque> B;
 
-pair<double,vector<Tupla>> GetWeightMatchDivision(int i, int m, int n){
-	vector<Tupla> retorno;
-  double suma = 0.0;
-	for(int p = m; p <= n; p++){
-		suma += B[p].longitud;
-    retorno.emplace_back(Tupla(i,p));
-	}
-
-	return make_pair(double(A[i].longitud)/double(suma),retorno);
-}
-pair<double,vector<Tupla>> GetWeightMatchGroup(int r, int s, int j){
+pair<vector<Tupla>, double> GetMatchDivision(int i, int m, int n){
+	vector<Tupla> matchs;
 	double suma = 0.0;
-  vector<Tupla> retorno;
-	for(int p = r; p <= s; p++){
-		suma += A[p].longitud;
-    retorno.emplace_back(Tupla(p,j));
+	for(int p = m; p <= n; p++){
+		matchs.emplace_back(i,p);
+		suma += B[p].longitud;
 	}
-	return  make_pair(double(suma)/double(B[j].longitud),retorno);
+	return make_pair(matchs, A[i].longitud/suma);
 }
 
+pair<vector<Tupla>, double> GetMatchGroup(int r, int s, int j){
+	vector<Tupla> matchs;
+	double suma = 0.0;
+	for(int p = r; p <= s; p++){
+		matchs.emplace_back(p,j);
+		suma += A[p].longitud;
+	}
+	return make_pair(matchs, suma/B[j].longitud);
+}
 
-pair<double,vector<Tupla>>  min_peso_bloques(int i, int j){
-	if(Matrix[i][j].first != 0) {
+pair<vector<Tupla>, double>  min_peso_bloques(int i, int j){
+	if(Matrix[i][j].second != 0) {
 		return Matrix[i][j];
 	}else if ( i == 0 ){
-	    Matrix[i][j] = GetWeightMatchDivision(i,0,j);
+	    Matrix[i][j] = GetMatchDivision(i,0,j);
     }else if ( j == 0 ){
-	    Matrix[i][j] = GetWeightMatchGroup(0,i,j);
+	    Matrix[i][j] = GetMatchGroup(0,i,j);
 	}else{
-		auto min_resultk = make_pair(double(INT16_MAX),vector<Tupla>());
-    auto  min_resultl = make_pair(double(INT16_MAX),vector<Tupla>());
+		double min_resultk = INT16_MAX;
+        double min_resultl = INT16_MAX;
 
-        for(int k = i-1; k >= 0 ; k--){
-            auto WeightMatch = GetWeightMatchGroup(k+1,i,j);
-            auto SubProblem = min_peso_bloques(k,j-1);
-            double result  = WeightMatch.first + SubProblem.first;
-            if (min_resultk.first > result){
-                min_resultk.first = result;
-                min_resultk.second = SubProblem.second;
-                min_resultk.second.insert( min_resultk.second.end(), WeightMatch.second.begin(),WeightMatch.second.end() );
+        pair<vector<Tupla>,double> Matchk;
+        pair<vector<Tupla>,double> SubProblemk;
+
+        pair<vector<Tupla>,double> Matchl;
+        pair<vector<Tupla>,double> SubProbleml;
+
+        vector<Tupla> matchsk;
+        vector<Tupla> matchsl;
+
+        for(int k = i; k >= 1; k--){
+            auto Match = GetMatchGroup(k,i,j);
+            auto SubProblem = min_peso_bloques(k-1,j-1);
+            auto result  = SubProblem.second + Match.second;
+			
+            if (min_resultk > result ) {
+                min_resultk = result; //Guardar el min peso
+                Matchk = Match; SubProblemk = SubProblem; //Tuplas
             }
-
-        }
-        for(int l = j-1; l >= 0 ; l--) {
-            auto WeightMatch = GetWeightMatchDivision(i,l+1,j);
-            auto SubProblem = min_peso_bloques(i-1,l);
-            double result = WeightMatch.first + SubProblem.first;
-            if (min_resultl.first > result){
-              min_resultl.first = result;
-              min_resultl.second = SubProblem.second;
-                min_resultl.second.insert( min_resultl.second.end(), WeightMatch.second.begin(),WeightMatch.second.end() );
-            }
-                
-
         }
 		
-		if(min_resultk.first > min_resultl.first){
-			Matrix[i][j] = min_resultl;
+		matchsk.insert( matchsk.begin(), begin(SubProblemk.first), end(SubProblemk.first) );
+        matchsk.insert( matchsk.end(), begin(Matchk.first), end(Matchk.first) );
+		
+        for(int l = j; l >= 1; l--){
+            auto Match = GetMatchDivision(i,l,j);
+            auto SubProblem =  min_peso_bloques(i-1,l-1);
+            auto result = SubProblem.second + Match.second;
+            
+            if (min_resultl > result) {
+                min_resultl = result; //Guardar el min peso
+                Matchl = Match; SubProbleml = SubProblem; //Guardar las Tuplas
+            }
+        }
+		
+		matchsl.insert( matchsl.begin(), begin(SubProbleml.first), end(SubProbleml.first) );
+        matchsl.insert( matchsl.end(), begin(Matchl.first), end(Matchl.first) );
+		
+		if(min_resultk > min_resultl){
+			Matrix[i][j] = make_pair( matchsl , min_resultl );
 		}
 		else{
-			Matrix[i][j] = min_resultk;
+			Matrix[i][j] = make_pair( matchsk , min_resultk );
 		}
 	}
     return Matrix[i][j];
 }
 
-pair<double,vector<Tupla>> MIN_MATCHING(vector<int> a, vector<int> b){
+pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
   ObtenerBloques(A,a);
   ObtenerBloques(B,b);
   
@@ -84,27 +94,27 @@ pair<double,vector<Tupla>> MIN_MATCHING(vector<int> a, vector<int> b){
   }
   vector<Tupla> temp;
   temp.emplace_back(Tupla(0,0));
-  Matrix[0][0] = make_pair(A[0].longitud/double(B[0].longitud),temp);
+  Matrix[0][0] = make_pair( temp, A[0].longitud/double(B[0].longitud) );
   
   return min_peso_bloques( A.size()-1, B.size()-1 ) ;
 }
 
 
 int main() {
-    vector<int>a;
-    vector<int>b;
+    vector<int> a; //{0, 1 , 0 , 0 , 1 , 1, 0 , 0 , 1};
+    vector<int> b; //{ 0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
     Menu(a,b);
     auto result = MIN_MATCHING(a,b);
 	
-	/*for(int i = 0; i < A.size(); i++){
+	for(int i = 0; i < A.size(); i++){
 	  for(int j = 0; j < B.size(); j++){
-		  cout<<setw(10)<<Matrix[i][j].first;
+		  cout<<setw(10)<<Matrix[i][j].second;
 	  }
 	  cout<<endl;
-	}*/
-    cout << "Optimo: " << result.first << endl;
+	}
+    cout << "Optimo: " << result.second << endl;
     cout << "Tupla: ";
-    for (auto it:result.second){
+    for (auto it : result.first){
       cout<<"("<<it.first<<","<<it.second<<") ";
     }
     cout << endl;
