@@ -1,12 +1,7 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <limits.h>
-#include <utility>
 
-#include "Useful.cpp"
+#include "../Useful.cpp"
 
-using namespace std;
+
 
 vector<bloque> A;
 vector<bloque> B;

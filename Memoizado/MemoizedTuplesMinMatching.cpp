@@ -1,12 +1,6 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <limits.h>
-#include <iomanip>
-#include <utility>
 
-using namespace std;
-#include "Useful.cpp"
+
+#include "../Useful.cpp"
 
 vector<vector<pair<double,vector<Tupla>>>> Matrix;
 
@@ -102,12 +96,12 @@ int main() {
     Menu(a,b);
     auto result = MIN_MATCHING(a,b);
 	
-	for(int i = 0; i < A.size(); i++){
+	/*for(int i = 0; i < A.size(); i++){
 	  for(int j = 0; j < B.size(); j++){
 		  cout<<setw(10)<<Matrix[i][j].first;
 	  }
 	  cout<<endl;
-	}
+	}*/
     cout << "Optimo: " << result.first << endl;
     cout << "Tupla: ";
     for (auto it:result.second){

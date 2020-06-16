@@ -1,4 +1,9 @@
+#include <iostream>
 #include <vector>
+#include <algorithm>
+#include <limits.h>
+#include <iomanip>
+#include <utility>
 #include <time.h>
 using namespace std;
 
@@ -98,8 +103,8 @@ void Menu(vector <int> &a ,vector <int> &b){
 		break;
 	 
 	case 2: 
-	break;
 		exit(0);
+		break;
 	}
 }
 

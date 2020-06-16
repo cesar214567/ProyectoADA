@@ -1,14 +1,4 @@
-#include <iostream>
-#include <algorithm>
-#include <limits.h>
-#include <utility>
-#include <vector>
-#include "Useful.cpp"
-
-#define p 25
-using namespace std;
-
-
+#include "../Useful.cpp"
 
 vector<bloque> A;
 vector<bloque> B;
