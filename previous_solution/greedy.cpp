@@ -104,8 +104,10 @@ int main() {
 
   //  int a[p]={0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0/* , 1  , 1 , 1 , 0 , 1 , 1 , 0 , 1 */};
   //  int b[p]={0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1/* , 0  , 1 , 1 , 0 , 0 , 0 , 0 , 0 */};
-    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
+    vector<int> a; // = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
+    vector<int> b; // = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
+    Cargar_consola(a,b);
+
     auto result = MIN_MATCHING(a,b);
 
     for(auto v : result.first){
