@@ -40,55 +40,56 @@ double peso(vector<Tupla> &matchings){
 
 vector<Tupla> greedy_min() {
     int i, j;
-    vector<Tupla> retorno;
+    vector<Tupla> matchings;
     i = 0;
     j = 0;
-    int cont = 0;
-    int oc = 0;
+    int cont_B = 0;
+    int cont_A = 0;
     while (i < A.size() - 1 && j < B.size() - 1) {
         if (B[j + 1].longitud < B[j].longitud) {
-            if (cont) {
+            if (cont_B) {
                 j++;
                 i++;
-                cont = 0;
+                cont_B = 0;
             } else {
-                retorno.emplace_back(Tupla(i, j));
+                matchings.emplace_back(Tupla(i, j));
                 j++;
-                oc++;
+                cont_A++;
             }
         } else if (A[i].longitud < A[i + 1].longitud) {
-            retorno.emplace_back(Tupla(i, j));
-            if(oc){
+            matchings.emplace_back(Tupla(i, j));
+            if(cont_A){
                 i++;
                 j++;
-                cont = 0;
-                oc = 0;
+                cont_B = 0;
+                cont_A = 0;
             }else{
                 i++;
-                cont++;
+                cont_B++;
             }
         }
         else{
-            retorno.emplace_back(Tupla(i, j));
+            matchings.emplace_back(Tupla(i, j));
             i++;
             j++;
-            cont = 0;
+            cont_B = 0;
         }
     }
     if (i == A.size() - 1) {
         while (j < B.size()) {
-            retorno.emplace_back(Tupla(i, j));
+            matchings.emplace_back(Tupla(i, j));
             j++;
         }
     } else {
         while (i < A.size()) {
-            retorno.emplace_back(Tupla(i, j));
+            matchings.emplace_back(Tupla(i, j));
             i++;
         }
     }
-
-    return retorno;
+        return matchings;
     }
+    
+    
     pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b ) {
         ObtenerBloques(A,a);
         ObtenerBloques(B,b);
