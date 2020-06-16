@@ -106,18 +106,14 @@ vector<Tupla> greedy_min() {
 
 
 int main() {
-
-  //  int a[p]={0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0/* , 1  , 1 , 1 , 0 , 1 , 1 , 0 , 1 */};
-  //  int b[p]={0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1/* , 0  , 1 , 1 , 0 , 0 , 0 , 0 , 0 */};
-    vector<int> a; // = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
-    vector<int> b; // = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
-    Cargar_consola(a,b);
-
+    vector<int> a; 
+    vector<int> b; 
+    Menu(a,b);
     auto result = MIN_MATCHING(a,b);
 
     for(auto v : result.first){
         cout<<"("<<v.first<<","<<v.second<<") ";
     }
-    cout << endl << result.second;
+    cout << endl << result.second <<endl;
     return 0;
 }

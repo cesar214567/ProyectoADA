@@ -66,8 +66,11 @@ int main() {
     //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
     vector<int>a;
     vector<int>b;
-    Cargar_consola(a,b);
+    //Cargar_consola(a,b);
+    Cargar_random(a,b);
     auto result = MIN_MATCHING(a,b);
 
     cout << "Optimo: " << result << endl;
 }
+
+

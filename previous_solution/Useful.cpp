@@ -1,5 +1,7 @@
 #include <vector>
+#include <time.h>
 using namespace std;
+
 class bloque{
 public:
     int longitud;
@@ -52,3 +54,53 @@ void Cargar_consola( vector <int> &a ,vector <int> &b ){
 	}
 	return;
 }
+
+void Cargar_random( vector <int> &a ,vector <int> &b ){
+	int p,val; 
+	cout << "Ingrese el tamaño del los arrays de 0 y 1 : " ;
+	cin >> p; 
+	srand (time(NULL));
+	for(int i = 0; i < p ; i ++){
+		val = rand()%2;
+		a.push_back(val);
+		val = rand()%2;
+		b.push_back(val);
+	}
+	cout << "El array A: ";
+	for(int i = 0; i < p ; i ++){
+		cout<< a[i] << " ";
+	}
+	cout << endl; 
+	cout << "El array B: ";
+	for(int i = 0; i < p ; i ++){
+		cout<< b[i] << " ";
+	}
+	cout << endl; 
+}
+
+void Menu(vector <int> &a ,vector <int> &b){
+	int opcion;
+	cout << "Elige una opcion: " << endl;
+	cout << "0. Cargar con Consola." <<endl;
+	cout << "1. Cargar random." <<endl;
+	cout << "2. Salir." <<endl;
+	cout << "Ingrese la opcion: ";
+	cin >> opcion;
+	cout << endl; 
+	switch (opcion)
+	{
+	case 0:
+		Cargar_consola(a,b);
+		break;
+	
+	case 1:
+		Cargar_random(a,b);
+		break;
+	 
+	case 2: 
+	break;
+		exit(0);
+	}
+}
+
+ 
