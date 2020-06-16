@@ -55,6 +55,8 @@ vector<Tupla> greedy_min() {
                 matchings.emplace_back(Tupla(i, j));
                 j++;
                 cont_A++;
+                if(j == B.size() - 1)
+                    i++;
             }
         } else if (A[i].longitud < A[i + 1].longitud) {
             matchings.emplace_back(Tupla(i, j));
@@ -66,6 +68,8 @@ vector<Tupla> greedy_min() {
             }else{
                 i++;
                 cont_B++;
+                if(i == A.size()-1)
+                    j++;
             }
         }
         else{
@@ -73,6 +77,7 @@ vector<Tupla> greedy_min() {
             i++;
             j++;
             cont_B = 0;
+            cont_A = 0;
         }
     }
     if (i == A.size() - 1) {
