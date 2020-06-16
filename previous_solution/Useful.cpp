@@ -34,11 +34,12 @@ void ObtenerBloques(vector<bloque>& v, vector<int> array){
 	}
 }
 
-void Cargar_consola( int &p ,vector <bloque> &a ,vector <bloque> &b ){
-	int tam,val; 
+void Cargar_consola( vector <int> a ,vector <int> b ){
+	
+	int p,val; 
 	cout << "Ingrese el tamaño del los arrays de 0 y 1 : " ;
-	cin >> tam; 
-	p = tam;
+	cin >> p; 
+	
 	cout << "Ingrese elementos de array \"B\" "; 
 	for(int i = 0; i < p ; i ++){
 		cin >> val;
