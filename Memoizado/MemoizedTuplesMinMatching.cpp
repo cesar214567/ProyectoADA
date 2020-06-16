@@ -97,13 +97,9 @@ pair<double,vector<Tupla>> MIN_MATCHING(vector<int> a, vector<int> b){
 
 
 int main() {
-	//vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
-  //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
-	//vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
-  //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
     vector<int>a;
     vector<int>b;
-    Cargar_consola(a,b);
+    Menu(a,b);
     auto result = MIN_MATCHING(a,b);
 	
 	for(int i = 0; i < A.size(); i++){
@@ -112,10 +108,10 @@ int main() {
 	  }
 	  cout<<endl;
 	}
-
     cout << "Optimo: " << result.first << endl;
     cout << "Tupla: ";
     for (auto it:result.second){
       cout<<"("<<it.first<<","<<it.second<<") ";
     }
+    cout << endl;
 }

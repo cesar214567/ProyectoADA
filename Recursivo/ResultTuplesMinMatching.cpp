@@ -90,14 +90,9 @@ pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
 }
 
 int main() {
-
-    //vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
-    //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
-    //vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 };
-    //vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 };
     vector<int>a;
     vector<int>b;
-    Cargar_consola(a,b);
+    Menu(a,b);
     auto result = MIN_MATCHING(a,b);
 
     cout << "Optimo: " << result.second << endl;
