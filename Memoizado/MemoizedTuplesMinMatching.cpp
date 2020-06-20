@@ -1,32 +1,37 @@
 #include "../Useful.cpp"
+#include <map>
+#include <ctime>
 
-vector<vector< pair<vector<Tupla>,double> >> Matrix;
+
+vector< vector<double> > Matrix;
+map< pair<int,int>, pair<int,int> > minSubProblem; //Para GetTuplas_1
+
+vector< int > sumaBloquesA;
+vector< int > sumaBloquesB;
 
 vector<bloque> A;
 vector<bloque> B;
+vector<Tupla> TuplasOPT;
+vector<Tupla> TuplasOPT_1; //Para GetTuplas_1
 
-pair<vector<Tupla>, double> GetMatchDivision(int i, int m, int n){
-	vector<Tupla> matchs;
-	double suma = 0.0;
-	for(int p = m; p <= n; p++){
-		matchs.emplace_back(i,p);
-		suma += B[p].longitud;
-	}
-	return make_pair(matchs, A[i].longitud/suma);
+double GetMatchDivision(int i, int m, int n){
+	if(m == n) return double(A[i].longitud)/B[m].longitud;
+	if(m == 0) return double(A[i].longitud)/sumaBloquesB[n];
+	double suma = sumaBloquesB[n] - sumaBloquesB[m-1];
+	
+	return A[i].longitud/suma;
 }
 
-pair<vector<Tupla>, double> GetMatchGroup(int r, int s, int j){
-	vector<Tupla> matchs;
-	double suma = 0.0;
-	for(int p = r; p <= s; p++){
-		matchs.emplace_back(p,j);
-		suma += A[p].longitud;
-	}
-	return make_pair(matchs, suma/B[j].longitud);
+double GetMatchGroup(int r, int s, int j){
+	if(r == s) return A[r].longitud/double(B[j].longitud);
+	if(r == 0) return sumaBloquesA[s]/double(B[j].longitud);
+	double suma = sumaBloquesA[s]-sumaBloquesA[r-1];
+	
+	return suma/B[j].longitud;
 }
 
-pair<vector<Tupla>, double>  min_peso_bloques(int i, int j){
-	if(Matrix[i][j].second != 0) {
+double Opt_Memoized(int i, int j){
+	if(Matrix[i][j] != 0) {
 		return Matrix[i][j];
 	}else if ( i == 0 ){
 	    Matrix[i][j] = GetMatchDivision(i,0,j);
@@ -36,86 +41,164 @@ pair<vector<Tupla>, double>  min_peso_bloques(int i, int j){
 		double min_resultk = INT16_MAX;
         double min_resultl = INT16_MAX;
 
-        pair<vector<Tupla>,double> Matchk;
-        pair<vector<Tupla>,double> SubProblemk;
-
-        pair<vector<Tupla>,double> Matchl;
-        pair<vector<Tupla>,double> SubProbleml;
-
-        vector<Tupla> matchsk;
-        vector<Tupla> matchsl;
+		int indexMinGroup, indexMinDivision; //extra
 
         for(int k = i; k >= 1; k--){
             auto Match = GetMatchGroup(k,i,j);
-            auto SubProblem = min_peso_bloques(k-1,j-1);
-            auto result  = SubProblem.second + Match.second;
-			
+            auto SubProblem = Opt_Memoized(k-1,j-1);
+            auto result  = SubProblem + Match;
+			//Guardar el min peso
             if (min_resultk > result ) {
-                min_resultk = result; //Guardar el min peso
-                Matchk = Match; SubProblemk = SubProblem; //Tuplas
-            }
+				min_resultk = result;
+				indexMinGroup = k; //extra
+			}
         }
-		
-		matchsk.insert( matchsk.begin(), begin(SubProblemk.first), end(SubProblemk.first) );
-        matchsk.insert( matchsk.end(), begin(Matchk.first), end(Matchk.first) );
 		
         for(int l = j; l >= 1; l--){
             auto Match = GetMatchDivision(i,l,j);
-            auto SubProblem =  min_peso_bloques(i-1,l-1);
-            auto result = SubProblem.second + Match.second;
-            
+            auto SubProblem =  Opt_Memoized(i-1,l-1);
+            auto result = SubProblem + Match;
+            //Guardar el min peso
             if (min_resultl > result) {
-                min_resultl = result; //Guardar el min peso
-                Matchl = Match; SubProbleml = SubProblem; //Guardar las Tuplas
-            }
+				min_resultl = result;
+				indexMinDivision = l; //extra
+			}
         }
-		
-		matchsl.insert( matchsl.begin(), begin(SubProbleml.first), end(SubProbleml.first) );
-        matchsl.insert( matchsl.end(), begin(Matchl.first), end(Matchl.first) );
-		
-		if(min_resultk > min_resultl){
-			Matrix[i][j] = make_pair( matchsl , min_resultl );
-		}
-		else{
-			Matrix[i][j] = make_pair( matchsk , min_resultk );
+		if(min_resultl > min_resultk){
+			Matrix[i][j] = min_resultk;
+			minSubProblem[make_pair(i,j)] = make_pair(indexMinGroup-1,j-1); //Usado en GetTuplas_1
+		}else{
+			Matrix[i][j] = min_resultl;
+			minSubProblem[make_pair(i,j)] = make_pair(i-1,indexMinDivision-1); //Usado en GetTuplas_1
 		}
 	}
     return Matrix[i][j];
 }
+//No tan eficiente , /*** menos gasto de memoria ***/
+void GetTuplas(int i, int j){
 
-pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
-  ObtenerBloques(A,a);
-  ObtenerBloques(B,b);
-  
-  Matrix.resize(A.size());
-  
-  for(int i = 0; i < A.size(); i++){
-	  Matrix[i].resize(B.size());
-  }
-  vector<Tupla> temp;
-  temp.emplace_back(Tupla(0,0));
-  Matrix[0][0] = make_pair( temp, A[0].longitud/double(B[0].longitud) );
-  
-  return min_peso_bloques( A.size()-1, B.size()-1 ) ;
+    if(i == 0){
+        for(int aux_j = 0; aux_j <= j; aux_j++)
+            TuplasOPT.emplace_back(i,aux_j);
+        return;
+    }else if(j == 0){
+        for(int aux_i = 0; aux_i <= i; aux_i++)
+            TuplasOPT.emplace_back(aux_i,j);
+        return;
+    }
+
+    double min_resultk = INT16_MAX;
+    double min_resultl = INT16_MAX;
+    int indexMinGroup;
+    int indexMinDivision;
+
+    for(int k = i; k >= 1; k--){
+        auto Match = GetMatchGroup(k,i,j);
+        auto SubProblem = Matrix[k-1][j-1];
+        auto result  = SubProblem + Match;
+        //Guardar el min peso
+        if (min_resultk > result ) {
+            min_resultk = result;
+            indexMinGroup = k;
+        }
+    }
+
+    for(int l = j; l >= 1; l--){
+        auto Match = GetMatchDivision(i,l,j);
+        auto SubProblem =  Matrix[i-1][l-1];
+        auto result = SubProblem + Match;
+        //Guardar el min peso
+        if (min_resultl > result) {
+            min_resultl = result;
+            indexMinDivision = l;
+        }
+    }
+    if(min_resultl > min_resultk){
+        GetTuplas(indexMinGroup-1,j-1);
+        for(int aux_i = indexMinGroup; aux_i <= i; aux_i++)
+            TuplasOPT.emplace_back(aux_i,j);
+
+    }else{
+        GetTuplas(i-1,indexMinDivision-1);
+        for(int aux_j = indexMinDivision; aux_j <= j; aux_j++)
+            TuplasOPT.emplace_back(i,aux_j);
+    }
+
+}
+// /*** Eficiente ***/, gasta más memoria.
+void GetTuplas_1(pair<int,int> OPT){
+    pair<int,int> SubProblem = minSubProblem[OPT];
+
+    if(SubProblem.first == 0){
+        for(int j = 0; j <= SubProblem.second; j++)
+            TuplasOPT_1.emplace_back(SubProblem.first, j);
+
+    }else if(SubProblem.second == 0){
+        for(int i = 0; i <= SubProblem.first; i++)
+            TuplasOPT_1.emplace_back(i, SubProblem.second);
+
+    }else GetTuplas_1(SubProblem);
+
+    if(SubProblem.first + 1 == OPT.first){
+        for(int j = SubProblem.second+1; j <= OPT.second; j++)
+            TuplasOPT_1.emplace_back(OPT.first,j);
+    }else{
+        for(int i = SubProblem.first+1; i <= OPT.first; i++)
+            TuplasOPT_1.emplace_back(i,OPT.second);
+    }
+}
+
+double MIN_MATCHING(vector<int> a, vector<int> b){
+	ObtenerBloques(A,a);
+	ObtenerBloques(B,b);
+	  
+	sumaBloquesA.resize( A.size() ); sumaBloquesA[0] = A[0].longitud;
+	for(int i = 1; i < A.size(); i++){
+		sumaBloquesA[i] = A[i].longitud + sumaBloquesA[i-1];
+	}
+	sumaBloquesB.resize( B.size() ); sumaBloquesB[0] = B[0].longitud;
+	for(int i = 1; i < B.size(); i++){
+		sumaBloquesB[i] = B[i].longitud + sumaBloquesB[i-1];
+	}
+
+	Matrix.resize(A.size());  
+	for(int i = 0; i < A.size(); i++) {
+        Matrix[i].resize(B.size());
+    }
+	return Opt_Memoized( A.size()-1, B.size()-1 );
 }
 
 
 int main() {
-    vector<int> a; //{0, 1 , 0 , 0 , 1 , 1, 0 , 0 , 1};
-    vector<int> b; //{ 0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1};
+    vector<int> a; //{0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
+    vector<int> b; //{0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
     Menu(a,b);
-    auto result = MIN_MATCHING(a,b);
-	
-	for(int i = 0; i < A.size(); i++){
-	  for(int j = 0; j < B.size(); j++){
-		  cout<<setw(10)<<Matrix[i][j].second;
-	  }
-	  cout<<endl;
-	}
-    cout << "Optimo: " << result.second << endl;
-    cout << "Tupla: ";
-    for (auto it : result.first){
+    cout << "OPTIMO: " << MIN_MATCHING(a,b) << endl;
+
+    cout<<"/****TIEMPO****/"<<endl;
+    clock_t t0,t1;
+    double time, time_1;
+
+    t0 = clock();
+	GetTuplas( A.size()-1, B.size()-1 );
+    t1 = clock();
+    time = (double(t1-t0)/CLOCKS_PER_SEC);
+
+    cout << "Funcion Get_Tuplas, tiempo: "; cout << setprecision(10) << time;
+    cout << endl;
+
+    t0 = clock();
+    GetTuplas_1( make_pair( A.size()-1, B.size()-1) );
+    t1 = clock();
+    time_1 = (double(t1-t0)/CLOCKS_PER_SEC);
+
+    cout << "Funcion Get_Tuplas_1, tiempo: "; cout << setprecision(10) << time_1;
+    cout << endl;
+
+    /*
+    cout << "Tuplas: ";
+    for (auto it : TuplasOPT){
       cout<<"("<<it.first<<","<<it.second<<") ";
     }
-    cout << endl;
+    cout << endl;*/
 }

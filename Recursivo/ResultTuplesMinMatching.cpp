@@ -1,7 +1,4 @@
-
 #include "../Useful.cpp"
-
-
 
 vector<bloque> A;
 vector<bloque> B;
@@ -15,6 +12,7 @@ pair<vector<Tupla>, double> GetMatchDivision(int i, int m, int n){
 	}
 	return make_pair(matchs, A[i].longitud/suma);
 }
+
 pair<vector<Tupla>, double> GetMatchGroup(int r, int s, int j){
 	vector<Tupla> matchs;
 	double suma = 0.0;
@@ -28,7 +26,6 @@ pair<vector<Tupla>, double> GetMatchGroup(int r, int s, int j){
 pair<vector<Tupla>, double> min_peso_bloques(int i, int j){
     if ( i == 0 ){
         return GetMatchDivision(i,0,j);
-
     }else if ( j == 0 ){
         return GetMatchGroup(0,i,j);
     }else{
@@ -44,29 +41,28 @@ pair<vector<Tupla>, double> min_peso_bloques(int i, int j){
         vector<Tupla> matchsk;
         vector<Tupla> matchsl;
 
-        for(int k = i-1; k >= 0 ; k--){
-            auto Match = GetMatchGroup(k+1,i,j);
-            auto SubProblem = min_peso_bloques(k,j-1);
+        for(int k = i; k >= 1; k--){
+            auto Match = GetMatchGroup(k,i,j);
+            auto SubProblem = min_peso_bloques(k-1,j-1);
             auto result  = SubProblem.second + Match.second;
+			
             if (min_resultk > result ) {
-                min_resultk = result;
-                Matchk = Match;
-                SubProblemk = SubProblem;
+                min_resultk = result; //Guardar el min peso
+                Matchk = Match; SubProblemk = SubProblem; //Tuplas
             }
         }
-
+		
         matchsk.insert( matchsk.begin(), begin(SubProblemk.first), end(SubProblemk.first) );
         matchsk.insert( matchsk.end(), begin(Matchk.first), end(Matchk.first) );
 
-        for(int l = j-1; l >= 0 ; l--){
-            auto Match = GetMatchDivision(i,l+1,j);
-            auto SubProblem =  min_peso_bloques(i-1,l);
+        for(int l = j; l >= 1; l--){
+            auto Match = GetMatchDivision(i,l,j);
+            auto SubProblem =  min_peso_bloques(i-1,l-1);
             auto result = SubProblem.second + Match.second;
             
             if (min_resultl > result) {
-                min_resultl = result;
-                Matchl = Match;
-                SubProbleml = SubProblem;
+                min_resultl = result; //Guardar el min peso
+                Matchl = Match; SubProbleml = SubProblem; //Guardar las Tuplas
             }
         }
 
@@ -77,6 +73,7 @@ pair<vector<Tupla>, double> min_peso_bloques(int i, int j){
         else return make_pair( matchsk , min_resultk );
     }
 }
+
 pair<vector<Tupla>, double> MIN_MATCHING(vector<int> a, vector<int> b){
   ObtenerBloques(A,a);
   ObtenerBloques(B,b);

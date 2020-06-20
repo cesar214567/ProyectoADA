@@ -13,7 +13,6 @@ public:
     int start;
     int end;
     bloque(int start_,int end_, int longitud_):start{start_}, end{end_},longitud{longitud_}{} 
-    bloque(int l): longitud{l}{}
 };
 
 class Tupla{
@@ -28,15 +27,14 @@ public:
 
 void ObtenerBloques(vector<bloque>& v, vector<int> array){
 	int cont= 0; 
-	bool c = false; 
 	for(int i = 0; i < array.size() ; i++){
 		if(array[i]){
-			cont++; c = true;
+			cont++;
 			if(i == array.size()-1) v.emplace_back(bloque(i-cont+1,i,cont));  
 		}
 		else if(cont){
 			v.emplace_back(bloque(i-cont,i-1,cont));
-			cont = 0; c = false;
+			cont = 0;
 		} 
 	}
 }
@@ -71,6 +69,7 @@ void Cargar_random( vector <int> &a ,vector <int> &b ){
 		val = rand()%2;
 		b.push_back(val);
 	}
+    /*
 	cout << "El array A: ";
 	for(int i = 0; i < p ; i ++){
 		cout<< a[i] << " ";
@@ -80,7 +79,7 @@ void Cargar_random( vector <int> &a ,vector <int> &b ){
 	for(int i = 0; i < p ; i ++){
 		cout<< b[i] << " ";
 	}
-	cout << endl; 
+	cout << endl;*/
 }
 
 void Menu(vector <int> &a ,vector <int> &b){
