@@ -1,0 +1,433 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[spanish]{babel}
+\usepackage{algorithm}
+%\usepackage{arevmath}     % For math symbols
+\usepackage[noend]{algpseudocode}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+\lstset{
+  frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\title{ \textbf{Proyecto ADA} }
+
+\author{
+Cesar Madera$^{1}$, Enrique Sobrados$^{2}$, Johan Tanta$^{3}$\\ \\
+\small{$^{1-3}$Ciencia de la Computación}\\
+\small{Universidad de Ingeniería y Tecnología, Barranco}\\
+\small{\texttt{\{$^{1}$cesar.madera,$^{2}$enrique.sobrados,$^{3}$johan.tanta\}@utec.edu.pe } }
+}
+\date{\small{Junio 16, 2020}}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+
+\section{Algoritmo Voraz}
+\subsection{Eleccion voraz}
+%Para el algoritmos voraz ya que nuestro limite de tiempo es O(max{m,n}) nuestro algoritmo se basa en verificar para un par i,j de la lista de bloques A y B respectivamente; si es que el bloque j es mayor que el bloque j+1, si es asi entonces tomaremos el par i,j y avanzaremos el puntero j. Si esto no se cumple hacemos una verificación para i si es que es menor que i+1 entonces tomamos la tupla i,j y avanzamos el puntero en i. Por último si no cumple ninguna de estas condiciones también tomamos la tupla y avanzamos ambos punteros. Estas tomas seran siempre y cuando no rompan con las condiciones de matching por lo que se pusieron algunas variables para controlar esto. Una vez lista los matchings se usara una función para calcular el peso.
+%
+Sea i, j punteros en los vectores de los bloques A y B respectivamente que empiezan desde el inicio. \textbf{Eleccion Voraz}: 
+
+\begin{itemize}
+\item Empezar a realizar un subconjunto con índice i, un $i-división$ con la condición: $B_{j} \geq B_{j+1}$
+\item Al no cumplir la anterior condición, empezar a realizar un subconjunto con índice j, un $j-agrupamiento$ con la condición:
+$A_{i} \leq A_{i+1}$
+\end{itemize}
+
+\subsection{Pseudocódigo}
+
+\begin{algorithm}
+\caption{Devuelve el Peso}
+\begin{algorithmic}[1]
+\Procedure{Weight}{matchings}
+    \State{suma\_total = 0}
+    \State{tempa = A[matchings[1].first].longitud}
+    \State{tempb = B[matchings[1].second].longitud}
+    \State{t\_a = matchings[0].first}
+    \State{t\_b = matchings[0].second}
+    \For{i = 2 \textbf{to} size(matchings)}
+        \If{matchings[i].first == t\_a}
+            \State{tempb += B[matchings[i].second].longitud}
+        \ElsIf{matchings[i].second == t\_b}
+            \State{tempa += A[matchings[i].first].longitud}
+        \Else
+            \State{suma\_total += tempa/tempb}
+            \State{t\_a = matchings[i].first}
+            \State{t\_b = matchings[i].second}
+            \State{tempa = A[matchings[i].first].longitud}
+            \State{tempb = B[matchings[i].second].longitud}
+        \EndIf
+    \EndFor
+    \State{suma\_total += tempa/tempb}
+    \State{\Return{suma\_total}}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Devuelve un Match entre A y B}
+\begin{algorithmic}[1]
+\Procedure{Greedy\_min}{$A,B$}
+    \State{i = 1}
+    \State{j = 1}
+    \State{cont\_B = 0}
+    \State{cont\_A = 0}
+    \While{ i $<$ size(A) \textbf{and} j $<$ size(B)}
+        \If{B[j + 1].longitud $<$ B[j].longitud}
+            \If{cont\_B}
+                \State{j++}
+                \State{i++}
+                \State{cont\_B = 0}
+            \Else
+                \State{matchings.push(i,j)}
+                \State{j++}
+                \State{cont\_A++}
+            \EndIf
+        \ElsIf{A[i].longitud $<$ A[i + 1].longitud}
+            \State{matchings.push(i,j)}
+            \If{cont\_A}
+                \State{i++}
+                \State{j++}
+                \State{cont\_A = 0}
+                \State{cont\_B = 0}
+            \Else
+                \State{i++}
+                \State{cont\_B = 0}
+            \EndIf
+        \Else
+            \State{matchings.push(i, j));}
+            \State{i++}
+            \State{j++}
+            \State{cont\_B = 0}
+        \EndIf
+    \EndWhile
+    \If{i == size(A) - 1} 
+        \While{j $<$ size(B)} 
+            \State{matchings.push(i, j)}
+            \State{j++}
+        \EndWhile
+    \Else 
+        \While{i $<$ size(A)}
+            \State{matchings.push(i, j)}
+            \State{i++}
+        \EndWhile
+    \EndIf
+    \State{\Return matchings, Weight(matchings) }
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\newpage
+\subsection{Tiempo de ejecucion}
+El tiempo de ejecución para este algoritmo en el peor de los casos es: 
+    La linea 6 se ejecuta m+n veces sin contar las constantes y la funcion Weight tiene un tiempo de ejecucion de max\{m.n\} ya que va a iterar en el maximo número de tuplas de matchings el cual es max\{m,n\}. 
+    Por lo tanto el tiempo de ejecucion del algoritmo: $T(m,n) = m+n+max\{m,n\}$ \\ \\
+\subsection{Demostración}
+\textbf{Demostrar: $T(m,n) = O(max\{m,n\})$}
+
+\begin{eqnarray*}
+m+n & \leq & 2 \times max\{m,n\} \\
+m+n+ max\{m,n\}  & \leq & 2 \times max\{m,n\} + max\{m,n\} \\
+m+n+ max\{m,n\}  & \leq & 3 \times max\{m,n\}, C_1 = 3 \\
+T(m,n)& =&  O(max\{m,n\}) 
+\end{eqnarray*}
+\section{Opt($i,j$)}
+\subsection{Solución óptima}
+Sea X la solución óptima del problema. Asimismo, sea P y Q subconjuntos.
+\begin{itemize}
+\item Donde P y el índice $j$, es un $j-agrupamiento$ definido:
+\begin{eqnarray*}
+P &=& (k,j),(k+1,j), \dots ,(i-1,j),(i,j) \hspace{1cm} 2 \leq k \leq i
+\end{eqnarray*}
+\item Donde Q y el índice $i$, es una $i-division$ definida:
+\begin{eqnarray*}
+Q &=& (i,l),(i,l+1), \dots ,(i,j-1),(i,j) \hspace{1cm} 2 \leq l \leq j
+\end{eqnarray*}
+\end{itemize}
+
+X debe incluir una solución óptima entre los subconjuntos P y Q, debido a ello se observan los siguientes escenarios:
+
+\begin{itemize}
+\item Si $ P \in X $:  Luego X debe incluir una solución óptima del subproblema que está dado por los bloques de $A = \{ A_1, A_2,\cdots,A_{k-1} \}$ y de $B = \{B_1,B_2,\cdots,B_{j-1}\}$.
+\item Si $ Q \in X $:  Luego X debe incluir una solución óptima del subproblema que está dado por los bloques de $A = \{ A_1, A_2,\cdots,A_{i-1} \}$ y de $B = \{B_1,B_2,\cdots,B_{l-1} \}$.
+\end{itemize}
+
+\subsection{Planteamiento de la Recurrencia}
+Para calcular el peso asociado a una agrupación es calculada por:
+\begin{eqnarray*}
+W_A(r,s,j) & = & \frac{A_r+A_{r+1}+\dots+A_s}{B_j}
+\end{eqnarray*}
+
+Para calcular el peso asociado a una división es calculada por:
+\begin{eqnarray*}
+W_D(i,m,n) & = & \frac{A_i}{B_m+B_{m+1}+\dots+B_n}
+\end{eqnarray*}
+
+Asimismo, para cada $(i,j)$ se define:
+\begin{eqnarray*}
+M_A(i,j) & = & min_{k=i}^{2}\left( W_A(k,i,j) + Opt(k-1,j-1) \right) \\ 
+M_D(i,j) & = & min_{l=j}^{2}\left( W_D(i,l,j) + Opt(i-1,l-1) \right)
+\end{eqnarray*}
+
+Se plantea la siguiente recurrencia
+\begin{equation*}
+Opt(i,j) =
+\begin{cases}
+W_A(1,i,1) & \text{j == 1}\\
+W_D(1,1,j) & \text{i == 1}\\
+min( M_A(i,j) , M_D(i,j) ) &  \text{Caso contrario}
+\end{cases}
+\end{equation*}
+
+\section{Algoritmo Recursivo}
+\subsection{Pseudocódigo}
+Se definen las siguientes funciones:
+\begin{algorithm}
+\caption{Devuelve las tuplas y el peso de un i-division}
+\begin{algorithmic}[1]
+\Procedure{MatchDivision}{$i,m,n$}
+    \State{Tuplas MatchD}
+    \For{p = m \textbf{to} n}
+        \State{MatchD.push( i , p )}
+    \EndFor
+    \Return{ MatchD }
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Devuelve las tuplas y el peso de un j-agrupamiento}
+\begin{algorithmic}[1]
+\Procedure{MatchGroup}{$r,s,j$}
+    \State{Tuplas MatchG}
+    \For{p = r \textbf{to} s}
+        \State{MatchG.push( p , j )}
+    \EndFor
+    \Return{ MatchG }
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Luego se define la función Opt(i,j):
+\newpage
+\begin{algorithm}
+\caption{Devuelve el min matching}
+\begin{algorithmic}[1]
+\Procedure{Opt}{$i,j$}       
+    \If{$i== 1$}
+    \State \Return MatchDivision(i, 0, j)
+    
+    \ElsIf{$j==1$}
+    \State  \Return MatchGroup(0, i, j)
+    
+    \Else
+    \State{Tuplas min\_resultk.weight = $\infty$}
+    \State{Tuplas min\_resultl.weight = $\infty$}
+    \For{k = i \textbf{down to} 2}
+    \State{Match = MATCHGROUP( $k, i, j$ )}
+    \State{SubProblem = Opt( $k-1, j-1$ )}
+    \State{result = SubProblem + Match }
+    \If{min\_resultk.weight $>$ result.weight}
+    \State{min\_resultk = result}
+    \EndIf
+    \EndFor
+    
+    \For{l = j \textbf{down to} 2}
+    \State{Match = MATCHDIVISION( $i, l, j$ )}
+    \State{SubProblem = Opt( $i-1, l-1$ )}
+    \State{result = SubProblem + Match }
+    \If{min\_resultl.weight $>$ result.weight}
+    \State{min\_resultl = result}
+    \EndIf
+    \EndFor
+    \State{\Return min( min\_resultl, min\_resultk )}
+    \EndIf
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Tiempo de Ejecución}
+Al analizar el tiempo de ejecución del Algorithm 5, se obtiene lo siguiente: 
+
+\begin{equation*}
+Opt(i,j) =
+\begin{cases}
+c  & \text{i == 1 $\vee$  j == 1}\\
+T(i,j) = \sum^2_{k=i}T(k-1,j-1)+\sum^{2}_{k=j}T(i-1,k-1) & \text{Caso contrario}
+\end{cases}
+\end{equation*}
+
+Probaremos por induccion que $T(i,j)=\Omega(2^{max(i,j)})$, con $c = \frac{1}{2}$:
+
+\begin{itemize}
+\item Como caso base, donde i = 1, j = 1 y $c_1 = 1$, se ejecuta la línea 2 y 3.
+\begin{eqnarray*}
+T(i,j) & \geq & c_12^{max(1,1)} \\
+T(i,j) & \geq & 2^1 
+\end{eqnarray*}
+\item Paso inductivo:
+\begin{eqnarray*}
+\Omega(2^{max(i,j)}) = T(i,j) \hspace{1cm} 1 \leq i \leq m-1 \hspace{0.5cm} \wedge \hspace{0.5cm} 1 \leq j \leq n-1 \\
+\end{eqnarray*}
+Se sabe que:
+\begin{eqnarray*}
+T(m,n) &=& \sum^2_{k=m}T(k-1,n-1)+\sum^{2}_{k=n}T(m-1,k-1) \\
+T(m,n) &=& \sum^2_{k=m}T(k-1,n-1)+\sum^{2}_{k=n}T(m-1,k-1) \geq \sum^2_{k=m}T(k-1,n-1) \\
+T(m,n) &\geq& \sum^2_{k=m}T(k-1,n-1) \\
+T(m,n) &\geq& T(m-1,n-1) \\
+T(m,n) &\geq& 2^{max(m-1,n-1)} \\
+T(m,n) &\geq& 2^{max(m,n)-1} \\
+T(m,n) &\geq& \frac{1}{2}2^{max(m,n)}
+\end{eqnarray*}
+Se concluye que $T(m,n)=\Omega(2^{max(m,n)})$
+\begin{eqnarray*}
+T(m,n) &\geq& \frac{1}{2}2^{max(m,n)} \hspace{1cm} \text{ m $\geq$ 1 $\wedge$ n $\geq$ 1}
+\end{eqnarray*}
+
+\end{itemize}
+
+\section{Algoritmo Memoizado}
+
+\subsection{Pseudocódigo}
+Se reutiliza las funciones MatchGroup y MatchDivision definidos en la anterior sección. Antes de implementar el algoritmo, se inicializa toda la matriz en cero.
+
+\newpage
+\begin{algorithm}
+\caption{Devuelve el min matching utilizando una matriz como apoyo}
+\begin{algorithmic}[1]
+\Procedure{Opt}{$i,j$}
+    \If{Matrix[i][j] != 0}
+    \State{ \Return Matrix[i][j]}
+    
+    \If{$i==1$}
+    \State{ Matrix[i][j] = MatchDivision(i, 0, j) }
+    \State{ \Return Matrix[i][j] }
+    
+    \ElsIf{$j==1$}
+    \State{ Matrix[i][j] = MatchGroup(0, i, j) }
+    \State{ \Return Matrix[i][j] }
+    
+    \Else
+    \State{Tuplas min\_resultk.weight = $\infty$}
+    \State{Tuplas min\_resultl.weight = $\infty$}
+    \For{k = i \textbf{down to} 2}
+    \State{Match = MATCHGROUP( $k, i, j$ )}
+    \State{SubProblem = Opt( $k-1, j-1$ )}
+    \State{result = SubProblem + Match }
+    \If{min\_resultk.weight $>$ result.weight}
+    \State{min\_resultk = result}
+    \EndIf
+    \EndFor
+    
+    \For{l = j \textbf{down to} 2}
+    \State{Match = MATCHDIVISION( $i, l, j$ )}
+    \State{SubProblem = Opt( $i-1, l-1$ )}
+    \State{result = SubProblem + Match }
+    \If{min\_resultl.weight $>$ result.weight}
+    \State{min\_resultl = result}
+    \EndIf
+    \EndFor
+    
+    \State{Matrix[i][j] = min( min\_resultl, min\_resultk )}
+    \State{\Return Matrix[i][j]}
+    \EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Tiempo de ejecución}
+
+El tiempo de ejecucion de este algoritmo está dado por:
+
+\begin{equation}
+T(i,j) = ( \text{ \# SubProblemas } ) * ( \text{Tiempo por SubProblema} )  
+\end{equation}
+
+Se esta tomando en consideracion que las funciones MatchDivision y MatchGroup se ejecutan en tiempo constante, por lo que solo se necesita contabilizar el numero de subproblemas existentes$^1$. Se replantea la ecuación (1):
+\begin{equation}
+T(i,j) = ( \text{ \# SubProblemas } ) * c
+\end{equation}  
+
+Asimismo, debido a las llamadas recursivas de los subproblemas $T(k-1,j-1)$ y $T(i-1,l-1)$ en las lineas 15 y 21 del algoritmo memoizado la cantidad de subproblemas que se resuelven son:
+
+$$(\text{\# SubProblemas}) = (i-1)*(j-1)+\underbrace{1}_{\text{Problema original: } T(i,j)}$$
+
+Entonces, para $T(m,n)$ se obtiene:
+\begin{eqnarray*}
+T(m,n) &=& (m-1)*(n-1)+1 \\
+m*n &\geq& (m-1)*(n-1)+1 = T(m,n) \\
+m*n &\geq& T(m,n)
+\end{eqnarray*}
+
+Por lo que se demuestra que $T(m,n)=O(mn)$
+
+\section{Repositorio}
+Enlace al repositorio git:
+https://github.com/cesar214567/ProyectoADA 
+
+\section{Bibliography}
+\begin{enumerate}
+    \item Demaine,Erik.(2011).Lecture 19: Dynamic Programming I: Fibonacci, Shortest Paths.Dynamic Programing. United States. MIT
+\end{enumerate}
+
+\end{document}
