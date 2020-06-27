@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <utility>
 #include <time.h>
+#include <string.h>
 using namespace std;
 
 class bloque{
@@ -41,19 +42,15 @@ void ObtenerBloques(vector<bloque>& v, vector<int> array){
 
 void Cargar_consola( vector <int> &a ,vector <int> &b ){
 	
-	int p,val; 
-	cout << "Ingrese el tamaño del los arrays de 0 y 1 : " ;
-	cin >> p; 
-	
-	cout << "Ingrese elementos de array \"A\" : "; 
-	for(int i = 0; i < p ; i ++){
-		cin >> val;
-		a.push_back(val);
-	}
-	cout << "Ingrese elementos de array \"B\" : "; 
-	for(int i = 0; i < p ; i ++){
-		cin >> val;
-		b.push_back(val);
+	string  a_,b_; 
+	cout << "Ingrese el vector A de 0 y 1 : " ;
+	cin >> a_;
+	cout << "Ingrese el vector B de 0 y 1 : " ;
+	cin >> b_; 
+
+	for(int i = 0; i < a_.size(); i++){
+		a.push_back(int(a_[i]) - 48);
+		b.push_back(int(b_[i]) - 48);
 	}
 	return;
 }
