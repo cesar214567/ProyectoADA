@@ -94,7 +94,7 @@ vector<Tupla> greedy_min() {
         return ret1;
     }
 
-
+/*
 int main() {
     vector<int> a; 
     vector<int> b; 
@@ -106,4 +106,4 @@ int main() {
     }
     cout << endl << result.second <<endl;
     return 0;
-}
+}*/
