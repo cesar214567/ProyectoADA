@@ -1,4 +1,5 @@
 #include "../Useful.cpp"
+import python.Useful as us
 
 A = []
 B = []
@@ -75,8 +76,8 @@ def greedy_min():
     
         
 def MIN_MATCHING(a, b):
-    ObtenerBloques(A,a)
-    ObtenerBloques(B,b)
+    A = us.ObtenerBloques(a)
+    B = us.ObtenerBloques(B,b)
 
     ret1 = greedy_min()
     ret2 = peso(ret1[0])
@@ -84,15 +85,13 @@ def MIN_MATCHING(a, b):
     return ret
 
 
-#int main() {
-#    vector<int> a; 
-#    vector<int> b; 
-#    Menu(a,b);
-#    auto result = MIN_MATCHING(a,b);
+if __name__ == "__main__":
+    a = []; 
+    b = []; 
+    us.Menu(a,b)
+    result = MIN_MATCHING(a,b)
 
-#    for(auto v : result[0]){
-#        cout<<"("<<v[0]<<","<<v[1]<<") ";
-#    }
-#    cout << endl << result[1] <<endl;
-#    return 0;
-#}
+    for v in result[0]: 
+        print("(" + str(v[0])  + "," + v[1]<<") ")
+        
+    print(result[1])
