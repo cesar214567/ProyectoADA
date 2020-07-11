@@ -1,8 +1,6 @@
 import random 
 class bloque:
-	longitud=0
-	start=0
-	end=0
+	
 	def __init__(self,start,end,longitud):
 		self.longitud= longitud
 		self.start = start
@@ -92,8 +90,7 @@ if __name__ == "__main__":
 	bloquesA =ObtenerBloques(A)
 	bloquesB = ObtenerBloques(B)
 	for i in bloquesA:
-		print(str(i.get_start()) +" "+str(i.get_end()) +" "+str(i.get_longitud()))
+		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud))
 	print("espacio")
 	for i in bloquesB:
-		print(str(i.get_start()) +" "+str(i.get_end()) +" "+str(i.get_longitud()))
- 
+		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud)) 
