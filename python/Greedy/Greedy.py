@@ -1,14 +1,19 @@
 #include "../Useful.cpp"
+import sys
+sys.path.append("../")
+import Useful as us
 
 A = []
 B = []
 
 def peso(matchings):
+    global A
+    global B
     suma_total=0
-    tempa = A[matchings[0][0]].longitud
-    tempb = B[matchings[0][1]].longitud
     t_a = matchings[0][0]
     t_b = matchings[0][1]
+    tempa = A[t_a].longitud
+    tempb = B[t_b].longitud
     for i in range  (1,len(matchings),1):
         if(matchings[i][0] == t_a):
             tempb += B[matchings[i][1]].longitud
@@ -38,13 +43,13 @@ def greedy_min():
                 i += 1
                 cont_B = 0
             else:
-                matchings.append((i,j))
+                matchings.append([i,j])
                 j += 1
                 cont_A += 1
                 if( j == len(B)- 1 ):
                     i += 1  
         elif (A[i].longitud < A[i + 1].longitud):
-            matchings.append((i,j))
+            matchings.append([i,j])
             if(cont_A):
                 i += 1
                 j += 1 
@@ -53,46 +58,47 @@ def greedy_min():
             else:
                 i += 1
                 cont_B += 1 
-                if(i == A.size()-1):
+                if(i == len(A)-1):
                     j += 1
         else:
-            matchings.append((i, j))
+            matchings.append([i,j])
             i += 1 
             j += 1 
             cont_B = 0
             cont_A = 0
 
-    if (i == A.size() - 1):
-        while (j < B.size()):
-            matchings.append((i, j))
+    if (i == len(A) - 1):
+        while (j < len(B)):
+            matchings.append([i,j])
             j += 1
     else:
-        while (i < A.size()):
-            matchings.append((i, j))
+        while (i < len(A)):
+            matchings.append([i,j])
             i += 1
 
     return matchings
     
         
 def MIN_MATCHING(a, b):
-    ObtenerBloques(A,a)
-    ObtenerBloques(B,b)
-
+    global A
+    global B
+    A = us.ObtenerBloques(a)
+    B = us.ObtenerBloques(b)
+    
     ret1 = greedy_min()
-    ret2 = peso(ret1[0])
+    
+    ret2 = peso(ret1)
     ret = (ret1 , ret2)
     return ret
 
 
-#int main() {
-#    vector<int> a; 
-#    vector<int> b; 
-#    Menu(a,b);
-#    auto result = MIN_MATCHING(a,b);
+if __name__ == "__main__":
+    a = []; 
+    b = []; 
+    us.Menu(a,b)
+    result = MIN_MATCHING(a,b)
 
-#    for(auto v : result[0]){
-#        cout<<"("<<v[0]<<","<<v[1]<<") ";
-#    }
-#    cout << endl << result[1] <<endl;
-#    return 0;
-#}
+    for v in result[0]: 
+        print("(" + str(v[0])  + "," + str(v[1]) + ") ",end = " ")
+
+    print("\n " + str(result[1]))

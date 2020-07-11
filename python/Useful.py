@@ -1,27 +1,36 @@
 import random 
 class bloque:
-	def __init__(self,longitud,start,end):
+	
+	def __init__(self,start,end,longitud):
 		self.longitud= longitud
 		self.start = start
 		self.end= end
-
+	def get_longitud(self):
+		return self.longitud
+	def get_start(self):
+		return self.start
+	def get_end(self):
+		return self.end
 class tupla: 
 	def __init__(self, first,second):
 		self.first = first
 		self.second = second
 
 def ObtenerBloques(array):
+	print(array)
 	retorno= []
 	cont=0
-	for i in range(array):
-		if (i):
+	iterador=0
+	for i in array:
+		if (i==1):
 			cont+=1
-			if (i==len(array)-1):
-				retorno.append(bloque(i-cont+1,i,cont))
+			if (iterador==len(array)-1):
+				retorno.append(bloque(iterador-cont+1,iterador,cont))
 		else:
 			if(cont):
-				retorno.append(bloque(i-cont,i-1,cont))
+				retorno.append(bloque(iterador-cont,iterador-1,cont))
 				cont=0
+		iterador+=1
 	return retorno
 			
 
@@ -42,9 +51,9 @@ def ObtenerBloques(array):
 def Cargar_consola(vectorA,vectorB):
 	a = str(input("ingrese el vector A de 0 y 1:" ))
 	b = str(input("ingrese el vector B de 0 y 1:" ))
-	for i in len(a):
-		vectorA.append(a[i])
-		vectorB.append(b[i])
+	for i in range(len(a)):
+		vectorA.append(int(a[i]))
+		vectorB.append(int(b[i]))
 
 
 
@@ -72,6 +81,16 @@ def Menu(vectorA,vectorB):
 		else:
 			exit(0)
 
-
-
- 
+if __name__ == "__main__":
+	A=[]
+	B=[]
+	Menu(A,B)
+	print(A)
+	print(B)	
+	bloquesA =ObtenerBloques(A)
+	bloquesB = ObtenerBloques(B)
+	for i in bloquesA:
+		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud))
+	print("espacio")
+	for i in bloquesB:
+		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud)) 
