@@ -1,17 +1,11 @@
 import random 
-class bloque:
-	
+class bloque():
 	def __init__(self,start,end,longitud):
 		self.longitud= longitud
 		self.start = start
 		self.end= end
-	def get_longitud(self):
-		return self.longitud
-	def get_start(self):
-		return self.start
-	def get_end(self):
-		return self.end
-class tupla: 
+
+class tupla(): 
 	def __init__(self, first,second):
 		self.first = first
 		self.second = second
@@ -61,8 +55,8 @@ def Cargar_consola(vectorA,vectorB):
 def Cargar_random(vectorA,vectorB):
 	p = int(input("ingrese el tamaño de los arrays de 0 y 1: "))
 	for i in range(p):
-		vectorA.append(random.random()%2)
-		vectorB.append(random.random()%2)
+		vectorA.append(random.randint(0,1))
+		vectorB.append(random.randint(0,1))
 	print("el array A",vectorA)
 	print("el array B",vectorB)
 
@@ -76,7 +70,7 @@ def Menu(vectorA,vectorB):
 	if opcion==0:
 		Cargar_consola(vectorA,vectorB)
 	else:
-		if opcion==2: 
+		if opcion==1: 
 			Cargar_random(vectorA,vectorB)
 		else:
 			exit(0)
