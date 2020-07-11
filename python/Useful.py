@@ -6,25 +6,32 @@
 #include <utility>
 #include <time.h>
 #include <string.h>
-using namespace std;
 
-class bloque{
-public:
-    int longitud;
-    int start;
-    int end;
-    bloque(int start_,int end_, int longitud_):start{start_}, end{end_},longitud{longitud_}{} 
-};
+class bloque:
+	def __init__(self,longitud,start,end):
+		self.longitud= longitud
+		self.start = start
+		self.end= end
 
-class Tupla{
-public:
-    int first;
-    int second;
-    Tupla(int first, int second){
-        this->first = first;
-        this->second = second;
-    }
-};
+class tupla: 
+	def __init__(self, first,second):
+		self.first = first
+		self.second = second
+
+def ObtenerBloques(array):
+	retorno= []
+	cont=0
+	for i in range(array):
+		if (i):
+			cont+=1
+			if (i==len(array)-1):
+				retorno.append(bloque(i-cont+1,i,cont))
+		else:
+			if(cont):
+				retorno.append(bloque(i-cont,i-1,cont))
+				cont=0
+	return retorno
+			
 
 void ObtenerBloques(vector<bloque>& v, vector<int> array){
 	int cont= 0; 
