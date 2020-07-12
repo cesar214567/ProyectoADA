@@ -1,10 +1,9 @@
 #include "../Secuencias/Dinamica/dinamica.cpp"
-#include "../Usefull2.cpp"
+
+import Useful
 
 
-
-
-int main(){
+if __name__ == "__main__":
     auto temp= getMatriz();
     vector<vector<int>> matriz1;
     vector<vector<int>> matriz2;
