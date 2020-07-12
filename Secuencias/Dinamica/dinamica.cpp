@@ -30,79 +30,77 @@ double GetMatchGroup(int r, int s, int j){
 }
 
 void OPT_Result(int i, int j){
-	double min_resultk = INT16_MAX;
-    double min_resultl = INT16_MAX;
-
-	int indexMinGroup, indexMinDivision; //extra
-	
-	for(int k = i; k >= 1; k--){
-		auto Match = GetMatchGroup(k,i,j);
-		auto SubProblem = Matrix[k-1][j-1];
-		auto result  = SubProblem + Match;
-		//Guardar el min peso
-		if (min_resultk > result ) {
-			min_resultk = result;
-			indexMinGroup = k;
-		}
-	}
-
-	for(int l = j; l >= 1; l--){
-		auto Match = GetMatchDivision(i,l,j);
-		auto SubProblem =  Matrix[i-1][l-1];
-		auto result = SubProblem + Match;
-		//Guardar el min peso
-		if (min_resultl > result) {
-			min_resultl = result;
-			indexMinDivision = l;
-		}
-	}
-	
-	if(min_resultl > min_resultk){
-		Matrix[i][j] = min_resultk;
-		minSubProblem[make_pair(i,j)] = make_pair(indexMinGroup-1,j-1); //Usado en GetTuplas_1
+	if ( i == 0 ){
+	    Matrix[i][j] = GetMatchDivision(i,0,j);
+    }else if ( j == 0 ){
+	    Matrix[i][j] = GetMatchGroup(0,i,j);
 	}else{
-		Matrix[i][j] = min_resultl;
-		minSubProblem[make_pair(i,j)] = make_pair(i-1,indexMinDivision-1); //Usado en GetTuplas_1
+		double min_resultk = INT16_MAX;
+		double min_resultl = INT16_MAX;
+
+		int indexMinGroup, indexMinDivision; //extra
+		
+		for(int k = i; k >= 1; k--){
+			auto Match = GetMatchGroup(k,i,j);
+			auto SubProblem = Matrix[k-1][j-1];
+			auto result  = SubProblem + Match;
+			//Guardar el min peso
+			if (min_resultk > result ) {
+				min_resultk = result;
+				indexMinGroup = k;
+			}
+		}
+
+		for(int l = j; l >= 1; l--){
+			auto Match = GetMatchDivision(i,l,j);
+			auto SubProblem =  Matrix[i-1][l-1];
+			auto result = SubProblem + Match;
+			//Guardar el min peso
+			if (min_resultl > result) {
+				min_resultl = result;
+				indexMinDivision = l;
+			}
+		}
+		
+		if(min_resultl > min_resultk){
+			Matrix[i][j] = min_resultk;
+			minSubProblem[make_pair(i,j)] = make_pair(indexMinGroup-1,j-1); //Usado en GetTuplas_1
+		}else{
+			Matrix[i][j] = min_resultl;
+			minSubProblem[make_pair(i,j)] = make_pair(i-1,indexMinDivision-1); //Usado en GetTuplas_1
+		}
 	}
 }
 
 double DynamicProgramming(int x, int y){
-	//Casos Bases
-	for(int i = 0; i <= x-1; i++)
-		Matrix[i][0] = GetMatchGroup(0,i,0);
-	for(int j = 0; j <= y-1; j++)
-		Matrix[0][j] = GetMatchDivision(0,0,j);
-	
-	for(int i = 1; i <= x-1; i++ ){
-		for(int j = 1; j <= y-1; j++){
+
+	for(int i = 0; i <= x-1; i++ )
+		for(int j = 0; j <= y-1; j++)
 			OPT_Result(i,j);
-		}
-	}
+
 	OPT_Result(x,y);
 	
     return Matrix[x][y];
 }
 
 void GetTuplas(pair<int,int> OPT){
-    pair<int,int> SubProblem = minSubProblem[OPT];
-
-    if(SubProblem.first == 0){
-        for(int j = 0; j <= SubProblem.second; j++)
-            TuplasOPT.emplace_back(SubProblem.first, j);
-
-    }else if(SubProblem.second == 0){
-        for(int i = 0; i <= SubProblem.first; i++)
-            TuplasOPT.emplace_back(i, SubProblem.second);
-
-    }else GetTuplas(SubProblem);
-
-    if(SubProblem.first + 1 == OPT.first){
-        for(int j = SubProblem.second+1; j <= OPT.second; j++)
-            TuplasOPT.emplace_back(OPT.first,j);
-    }else{
-        for(int i = SubProblem.first+1; i <= OPT.first; i++)
-            TuplasOPT.emplace_back(i,OPT.second);
-    }
+	if(OPT.first == 0){
+		for(int j = 0; j <= OPT.second; j++)
+			TuplasOPT.emplace_back(OPT.first, j);
+	}else if(OPT.second == 0){
+		for(int i = 0; i <= OPT.first; i++)
+			TuplasOPT.emplace_back(i, OPT.second);
+	}else{
+		pair<int,int> SubProblem = minSubProblem[OPT];
+		GetTuplas(SubProblem);
+		if(SubProblem.first + 1 == OPT.first){
+			for(int j = SubProblem.second+1; j <= OPT.second; j++)
+            	TuplasOPT.emplace_back(OPT.first,j);
+		}else{
+			for(int i = SubProblem.first+1; i <= OPT.first; i++)
+            	TuplasOPT.emplace_back(i,OPT.second);
+		}
+	}
 }
 
 double MIN_MATCHING(vector<int> a, vector<int> b){
@@ -122,15 +120,17 @@ double MIN_MATCHING(vector<int> a, vector<int> b){
 	for(int i = 0; i < A.size(); i++) {
         Matrix[i].resize(B.size());
     }
+	
 	return DynamicProgramming( A.size()-1, B.size()-1 );
 }
 
-/*
+
 int main() {
-    vector<int> a = {0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1};
-    vector<int> b = {0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0};
+    vector<int> a = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    vector<int> b = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     //Menu(a,b);
-    cout << "OPTIMO: " << MIN_MATCHING(a,b) << endl;
+	auto value = MIN_MATCHING(a,b);
+    cout << "OPTIMO: " << value << endl;
     GetTuplas( make_pair( A.size()-1, B.size()-1) );
 
     cout << "Tuplas: ";
@@ -138,4 +138,4 @@ int main() {
       cout<<"("<<it.first<<","<<it.second<<") ";
     }
     cout << endl;
-}*/
+}
