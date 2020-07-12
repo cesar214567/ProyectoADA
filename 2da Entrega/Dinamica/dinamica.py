@@ -104,20 +104,20 @@ def InicializarSumaBloques():
     global sumaBloquesA
     global sumaBloquesB
 
+    sumaBloquesA.clear()
     sumaBloquesA.append(A[0].longitud)
     for i in range(1, len(A)):
         sumaBloquesA.append(A[i].longitud + sumaBloquesA[i-1])
 
+    sumaBloquesB.clear()
     sumaBloquesB.append(B[0].longitud)
     for i in range(1, len(B)):
         sumaBloquesB.append(B[i].longitud + sumaBloquesB[i-1])
 
-    print(sumaBloquesA)
-    print(sumaBloquesB)
 
 def InicializarMatrix():
     global Matrix
-
+    Matrix.clear()
     for i in range(0, len(A)):
         Matrix.append([])
     for i in range(0, len(A)):
@@ -130,6 +130,8 @@ def MIN_MATCHING(a, b):
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
 
+    TuplasOPT.clear()
+    minSubProblem.clear()
     InicializarSumaBloques()
     InicializarMatrix()
 

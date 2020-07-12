@@ -6,7 +6,6 @@ class bloque():
 		self.end= end
 
 def ObtenerBloques(array):
-	print(array)
 	retorno= []
 	cont=0
 	iterador=0
@@ -59,9 +58,7 @@ def Menu(vectorA,vectorB):
 if __name__ == "__main__":
 	A=[]
 	B=[]
-	Menu(A,B)
-	print(A)
-	print(B)	
+	Menu(A,B)	
 	bloquesA =ObtenerBloques(A)
 	bloquesB = ObtenerBloques(B)
 	for i in bloquesA:
