@@ -135,8 +135,13 @@ def MIN_MATCHING(a, b):
 
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
-    Inicializar()
-    return DynamicProgramming(len(A)-1, len(B)-1)
+    if(len(A) == 0 or len(B) == 0):
+        return 0
+    else:
+        Inicializar()
+        result = DynamicProgramming(len(A)-1, len(B)-1)
+        GetTuplas((len(A)-1, len(B)-1))
+        return result
 
 
 if __name__ == "__main__":
@@ -148,7 +153,6 @@ if __name__ == "__main__":
     b = []
     us.Menu(a, b)
     print("OPTIMO: " + str(MIN_MATCHING(a, b)) + "\n")
-    GetTuplas((len(A)-1, len(B)-1))
 
     print("Tuplas: ")
     for it in TuplasOPT:

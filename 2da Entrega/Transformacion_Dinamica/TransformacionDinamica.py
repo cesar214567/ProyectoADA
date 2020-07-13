@@ -13,7 +13,6 @@ def TransformacionDinamica(matrixA, matrixB):
     sumatoria = 0.0
     for i in range(0, len(matrixA)):
         result = dp.MIN_MATCHING(matrixA[i], matrixB[i])
-        dp.GetTuplas( (len(dp.A)-1, len(dp.B)-1) )
         
         MatrixMatchings.append(list(dp.TuplasOPT))
         MatrixBloquesA.append(list(dp.A))
