@@ -25,7 +25,7 @@ def LUM_input(imagen):
         if(R+G+B == 1):
             op = input("¿Guardar la imagen?[y/n]: ")
             if(op.lower() == "y"):
-                filepath = input("Ruta de Destino: ")
+                filepath = input("Ruta y nombre de la imagen: ")
                 GrayImage(imagen, R, G, B, filepath)
             return convert(imagen,R,G,B)
         print("Los valores ingresados no son correctos. Ingrese nuevamente:")
