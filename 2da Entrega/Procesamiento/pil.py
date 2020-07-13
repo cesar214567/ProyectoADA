@@ -4,17 +4,17 @@ import os
 
 def LUM_601(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        return GrayImage(imagen, 0.299, 0.587, 0.114, filepath)
+        GrayImage(imagen, 0.299, 0.587, 0.114, filepath)
     return convert(imagen, 0.299, 0.587, 0.114)
 
 def LUM_709(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        return GrayImage(imagen, 0.2126, 0.7152, 0.0722, filepath)
+        GrayImage(imagen, 0.2126, 0.7152, 0.0722, filepath)
     return convert(imagen, 0.2126, 0.7152, 0.0722)
 
 def LUM_240(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        return GrayImage(imagen, 0.212, 0.701, 0.087, filepath)
+        GrayImage(imagen, 0.212, 0.701, 0.087, filepath)
     return convert(imagen, 0.212, 0.701, 0.087)
 
 def LUM_input(imagen): 
@@ -26,7 +26,7 @@ def LUM_input(imagen):
             op = input("¿Guardar la imagen?[y/n]: ")
             if(op.lower() == "y"):
                 filepath = input("Ruta de Destino: ")
-                return GrayImage(imagen, R, G, B, filepath)
+                GrayImage(imagen, R, G, B, filepath)
             return convert(imagen,R,G,B)
         print("Los valores ingresados no son correctos. Ingrese nuevamente:")
 
@@ -44,7 +44,6 @@ def GrayImage(imagen, R, G, B, filepathD):
             Gris = int(RGB[0]*R + RGB[1]*G + RGB[2]*B)
             GrayImg.putpixel((x,y),(Gris,Gris,Gris))
     GrayImg.save(filepathD)
-    return GrayImg
 
 def SaveMatrix(matrix, filepath):
     try:
@@ -82,8 +81,10 @@ def convert(imagen, R, G, B):
 if __name__ == "__main__":
     imgPath =  "../../Images/Abdullah.jpeg"
     
-    testA = LUM_240(imgPath, GrayImg=True, filepath="../../Images/testA.png")
-    testB = LUM_709(imgPath, GrayImg=True, filepath="../../Images/testB.png")
-    testC = LUM_601(imgPath, GrayImg=True, filepath="../../Images/testC.png")
+    #SaveMatrix(LUM_240(imgPath), "../../Text/matriz01.txt")
+    SaveMatrix(LUM_input(imgPath), "../../Text/matriz01.txt")
+    #testA = LUM_240(imgPath, GrayImg=True, filepath="../../Images/testA.png")
+    #testB = LUM_709(imgPath, GrayImg=True, filepath="../../Images/testB.png")
+    #testC = LUM_601(imgPath, GrayImg=True, filepath="../../Images/testC.png")
     #testD = LUM_input(imgPath)
   
