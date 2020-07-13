@@ -4,21 +4,18 @@ import os
 
 def LUM_601(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        GrayImage(imagen, 0.299, 0.587, 0.114, filepath)
-    else:
-        return convert(imagen, 0.299, 0.587, 0.114)
+        return GrayImage(imagen, 0.299, 0.587, 0.114, filepath)
+    return convert(imagen, 0.299, 0.587, 0.114)
 
 def LUM_709(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        GrayImage(imagen, 0.2126, 0.7152, 0.0722, filepath)
-    else:
-        return convert(imagen, 0.2126, 0.7152, 0.0722)
+        return GrayImage(imagen, 0.2126, 0.7152, 0.0722, filepath)
+    return convert(imagen, 0.2126, 0.7152, 0.0722)
 
 def LUM_240(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
-        GrayImage(imagen, 0.212, 0.701, 0.087, filepath)
-    else:
-        return convert(imagen, 0.212, 0.701, 0.087)
+        return GrayImage(imagen, 0.212, 0.701, 0.087, filepath)
+    return convert(imagen, 0.212, 0.701, 0.087)
 
 def LUM_input(imagen): 
     while(True):
