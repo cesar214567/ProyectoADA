@@ -123,18 +123,19 @@ def InicializarMatrix():
     for i in range(0, len(A)):
         Matrix[i] = [0]*len(B)
 
+def Inicializar():
+    TuplasOPT.clear()
+    minSubProblem.clear()
+    InicializarSumaBloques()
+    InicializarMatrix()
+
 def MIN_MATCHING(a, b):
     global A
     global B
 
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
-
-    TuplasOPT.clear()
-    minSubProblem.clear()
-    InicializarSumaBloques()
-    InicializarMatrix()
-
+    Inicializar()
     return DynamicProgramming(len(A)-1, len(B)-1)
 
 

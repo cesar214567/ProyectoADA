@@ -21,16 +21,12 @@ def ObtenerBloques(array):
 		iterador+=1
 	return retorno
 
-
 def Cargar_consola(vectorA,vectorB):
 	a = str(input("ingrese el vector A de 0 y 1:" ))
 	b = str(input("ingrese el vector B de 0 y 1:" ))
 	for i in range(len(a)):
 		vectorA.append(int(a[i]))
 		vectorB.append(int(b[i]))
-
-
-
 
 def Cargar_random(vectorA,vectorB):
 	p = int(input("ingrese el tamaño de los arrays de 0 y 1: "))
@@ -55,28 +51,34 @@ def Menu(vectorA,vectorB):
 		else:
 			exit(0)
 
+def GetMatriz(txt):
+	matrix = []
+	f = open(txt, "r")
+	lines = f.readlines()
+	for line in lines:
+		temp = []
+		for i in range(0, len(line)-1):
+			temp.append(int(line[i]))
+		matrix.append(temp)
+	return matrix
+
+def ImprimirMatriz(matrix):
+    for it in matrix:
+        for it2 in it:
+            print(it2, end=' ')
+        print("")
+    print("")
+
 if __name__ == "__main__":
 	A=[]
 	B=[]
 	Menu(A,B)	
-	bloquesA =ObtenerBloques(A)
+	bloquesA = ObtenerBloques(A)
 	bloquesB = ObtenerBloques(B)
 	for i in bloquesA:
 		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud))
 	print("espacio")
 	for i in bloquesB:
 		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud)) 
-
-def GetMatriz(txt):
-    matriz1 = []
-    linea = ''
-    imput = open(txt)
-
-    while(imput.readline()):
-        temp = []
-        for i in range (0, len(linea)):
-            temp.append(linea[i]-48)
-        matriz1.append(temp)
-    return matriz1
 
 

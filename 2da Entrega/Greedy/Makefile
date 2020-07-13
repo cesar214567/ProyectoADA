@@ -1,4 +1,2 @@
 all:
-	g++ -o greedy.out greedy.cpp
-clean:
-	rm *.out
+	python3 Greedy.py

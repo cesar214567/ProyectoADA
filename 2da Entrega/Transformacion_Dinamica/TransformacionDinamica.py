@@ -1,30 +1,33 @@
 import sys 
 sys.path.append("../Dinamica")
-import dinamica us dp
+import dinamica as dp
+import Useful as us
 
-def ImprimirMatriz(matrix):
-    for it in matrix:
-        for it2 in it:
-            print(str(it2), end=' ')
-        print("\n")
-    print("\n")
+MatrixBloquesA = []
+MatrixBloquesB = []
+MatrixMatchings = []
+
+def TransformacionDinamica(matrixA, matrixB):
+    assert len(matrixA) == len(matrixB), "Incompatibles"
+    global MatrixMatchings, MatrixBloquesA, MatrixBloquesB
+    sumatoria = 0.0
+    for i in range(0, len(matrixA)):
+        result = dp.MIN_MATCHING(matrixA[i], matrixB[i])
+        dp.GetTuplas( (len(dp.A)-1, len(dp.B)-1) )
+        
+        MatrixMatchings.append(list(dp.TuplasOPT))
+        MatrixBloquesA.append(list(dp.A))
+        MatrixBloquesB.append(list(dp.B))
+        
+        sumatoria = sumatoria + result
+    return (sumatoria)
 
 if __name__ == "__main__":
-    temp = us.GetMatriz()
-    matriz1 = temp[0]
-    matriz2 = temp[1]
-    assert(len(matriz1) == len(matriz2), "Incompatibles")
-
-    ImprimirMatriz(matriz1)
-    ImprimirMatriz(matriz2)
-
-    sumatoria = 0.0
-
-    for i in range(0, len(matriz1)):
-        result = dp.MIN_MATCHING(matriz1[i], matriz2[i])
-        dp.GetTuplas( (len(matriz1)-1, len(matriz2)-1) )
-        for tupla in dp.TuplasOPT:
-            print("("+str(tupla[0])+","+str(tupla[1])+")", end=' ')
-        print("\n")
-        sumatoria = sumatoria + result
-    print("La sumatoria es: "+str(sumatoria))    
+    matriz1 = us.GetMatriz("../../Text/inputA.txt")
+    matriz2 = us.GetMatriz("../../Text/inputB.txt")
+    us.ImprimirMatriz(matriz1)
+    us.ImprimirMatriz(matriz2)
+    result = TransformacionDinamica(matriz1, matriz2)
+    print("Resultado: ", result)
+    for match in MatrixMatchings:
+        print(match)
