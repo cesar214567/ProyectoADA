@@ -2,6 +2,9 @@ from PIL import Image
 from copy import copy
 import os
 
+width  = 800
+height = 600
+
 def LUM_601(imagen, GrayImg = False, filepath = None):
     if(GrayImg):
         GrayImage(imagen, 0.299, 0.587, 0.114, filepath)
@@ -78,6 +81,17 @@ def convert(imagen, R, G, B):
 
     return ConvertedMatrix01
         
+def getImagenRGB(path):
+    image = Image.open(path)
+    image = image.resize((height,width))
+    return image 
+
+def getRow(Image,row): 
+    retorno=[] 
+    for iterator in range(width):
+        retorno.append(Image.getpixel((row,iterator)))
+    return retorno
+
 if __name__ == "__main__":
     imgPath =  "../../Images/Abdullah.jpeg"
     

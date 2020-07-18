@@ -2,7 +2,8 @@
 import sys
 sys.path.append("../")
 import Useful as us
-
+sys.path.append("../Procesamiento")
+import pil2 as pil
 A = []
 B = []
 
@@ -94,9 +95,23 @@ def MIN_MATCHING(a, b):
 
 
 if __name__ == "__main__":
-    a = []; 
-    b = []; 
-    us.Menu(a,b)
+    
+    imgPath =  "../../Images/Abdullah.jpeg"
+    imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
+    matriz01 = pil.convert(imgPath,0.2,0.6,0.2)
+    matriz02 = pil.convert(imgPath2,0.2,0.6,0.2)
+    img1 =pil.getImagenRGB(imgPath)
+    img2 =pil.getImagenRGB(imgPath2)
+    row11 = pil.getRow(img1,0)
+    row12 = pil.getRow(img2,0)
+    
+
+
+    #a = []; 
+    a = matriz01[0]
+    #b = []; 
+    b = matriz02[0]
+    #us.Menu(a,b)
     result = MIN_MATCHING(a,b)
 
     for v in result[0]: 
@@ -106,3 +121,24 @@ if __name__ == "__main__":
     
     for submatching in result[2]: 
         submatching.printear()
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+
+    matrix=[]
+    matrix.append(row11)
+    for i in range(us.Num_IMG):
+        lista= []
+        for j in range(len(row11)):
+            R = row11[j][0]+ (float(i+1)/float(us.Num_IMG))* (row12[j][0]-row11[j][0])
+            G = row11[j][1]+ (float(i+1)/float(us.Num_IMG))* (row12[j][1]-row11[j][1])
+            B = row11[j][1]+ (float(i+1)/float(us.Num_IMG))* (row12[j][2]-row11[j][2])
+            lista.append((R,G,B))
+        matrix.append(lista)
+    
+    for i in range(us.Num_IMG+1):
+        for j in range(len(row11)):
+            print(matrix[i][j][0],end=" ")
+        print("")

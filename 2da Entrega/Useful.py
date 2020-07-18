@@ -1,4 +1,7 @@
 import random 
+#from math import floor,ceil
+Num_IMG=5
+
 class bloque():
 	def __init__(self,start,end,longitud):
 		self.longitud= longitud
@@ -9,7 +12,7 @@ class submatching():
 	def __init__(self):
 		self.subA=[]
 		self.subB=[]
-
+		self.proporcionalidad=[]
 	def isDivision(self):
 		return len(subA)==1
 	def printear(self): 
@@ -21,6 +24,22 @@ class submatching():
 		for i in self.subB:
 			print(i.longitud,end=" ")
 		print("")
+	def getProporcionalidad(self):
+		if self.isDivision():
+			sumA=subA[0].longitud
+			sumB=0.0
+			for i in subB:
+				sumB+=float(i.longitud)
+			for i in subB:
+				proporcionalidad.append(i.longitud/sumB)
+		else:
+			sumB=subB[0].longitud
+			sumA=0.0
+			for i in subA:
+				sumA+=float(i.longitud)
+			for i in subA:
+				proporcionalidad.append(i.longitud/sumA)
+
 
 def ObtenerBloques(array):
 	retorno= []
