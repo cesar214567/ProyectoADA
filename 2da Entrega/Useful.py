@@ -20,7 +20,7 @@ class submatching():
 		print("")
 		for i in self.subB:
 			print(i.longitud,end=" ")
-		print(" ")
+		print("")
 
 def ObtenerBloques(array):
 	retorno= []
@@ -104,7 +104,7 @@ def proporcionaliad(matchings,A,B):
 			t_a = matchings[i][0]
 			t_b = matchings[i][1]
 			SubMatching.subA.append(A[t_a])
-			SubMatching.subA.append(B[t_b])
+			SubMatching.subB.append(B[t_b])
 	submatchings.append(SubMatching)
 	return submatchings
 
