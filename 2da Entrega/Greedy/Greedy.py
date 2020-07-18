@@ -88,7 +88,8 @@ def MIN_MATCHING(a, b):
     ret1 = greedy_min()
     
     ret2 = peso(ret1)
-    ret = (ret1 , ret2)
+    ret3 = us.proporcionaliad(ret1,A,B)
+    ret = (ret1 , ret2,ret3)
     return ret
 
 
@@ -102,3 +103,6 @@ if __name__ == "__main__":
         print("(" + str(v[0])  + "," + str(v[1]) + ") ",end = " ")
 
     print("\n " + str(result[1]))
+    
+    for submatching in result[2]: 
+        submatching.printear()

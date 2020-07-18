@@ -5,6 +5,23 @@ class bloque():
 		self.start = start
 		self.end= end
 
+class submatching():
+	def __init__(self):
+		self.subA=[]
+		self.subB=[]
+
+	def isDivision(self):
+		return len(subA)==1
+	def printear(self): 
+		print("primer array")
+
+		for i in self.subA:
+			print(i.longitud,end=" ")
+		print("")
+		for i in self.subB:
+			print(i.longitud,end=" ")
+		print(" ")
+
 def ObtenerBloques(array):
 	retorno= []
 	cont=0
@@ -68,6 +85,28 @@ def ImprimirMatriz(matrix):
             print(it2, end=' ')
         print("")
     print("")
+	
+def proporcionaliad(matchings,A,B):
+	t_a = matchings[0][0]
+	t_b = matchings[0][1]
+	submatchings=[]
+	SubMatching= submatching()
+	SubMatching.subA.append(A[t_a])
+	SubMatching.subB.append(B[t_b])
+	for i in range  (1,len(matchings),1):
+		if(matchings[i][0] == t_a):
+			SubMatching.subB.append(B[matchings[i][1]])        
+		elif (matchings[i][1] == t_b):
+			SubMatching.subA.append(A[matchings[i][0]])
+		else:
+			submatchings.append(SubMatching)
+			SubMatching=submatching()
+			t_a = matchings[i][0]
+			t_b = matchings[i][1]
+			SubMatching.subA.append(A[t_a])
+			SubMatching.subA.append(B[t_b])
+	submatchings.append(SubMatching)
+	return submatchings
 
 if __name__ == "__main__":
 	A=[]
