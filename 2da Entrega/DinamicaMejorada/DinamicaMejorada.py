@@ -13,25 +13,26 @@ A = []
 B = []
 TuplasOPT = []
 
+u = 0.0
 
 def GetMatchDivision(i, m, n):
     if(m == n):
-        return float(A[i].longitud)/B[m].longitud
+        return abs(float(A[i].longitud)/B[m].longitud - u)
     if(m == 0):
-        return float(A[i].longitud)/sumaBloquesB[n]
+        return abs(float(A[i].longitud)/sumaBloquesB[n] - u)
 
     suma = sumaBloquesB[n] - sumaBloquesB[m-1]
-    return float(A[i].longitud)/suma
+    return abs(float(A[i].longitud)/suma - u)
 
 
 def GetMatchGroup(r, s, j):
     if(r == s):
-        return A[r].longitud/float(B[j].longitud)
+        return abs(A[r].longitud/float(B[j].longitud) - u)
     if(r == 0):
-        return sumaBloquesA[s]/float(B[j].longitud)
+        return abs(sumaBloquesA[s]/float(B[j].longitud) - u)
     suma = sumaBloquesA[s] - sumaBloquesA[r-1]
 
-    return suma/float(B[j].longitud)
+    return abs(suma/float(B[j].longitud) - u)
 
 
 def OPT_Result(i, j):
@@ -123,10 +124,15 @@ def InicializarMatrix():
     for i in range(0, len(A)):
         Matrix[i] = [0]*len(B)
 
+def InicializarU():
+    global u
+    u = float(sumaBloquesA[len(A)-1])/float(sumaBloquesB[len(B)-1])
+
 def Inicializar():
     TuplasOPT.clear()
     minSubProblem.clear()
     InicializarSumaBloques()
+    InicializarU()
     InicializarMatrix()
 
 def MIN_MATCHING(a, b):
@@ -153,7 +159,7 @@ if __name__ == "__main__":
     b = []
     us.Menu(a, b)
     print("OPTIMO: " + str(MIN_MATCHING(a, b)) + "\n")
-
+    print(u)
     print("Tuplas: ")
     for it in TuplasOPT:
         print("(" + str(it[0]) + "," + str(it[1]) + ")", end=' ')
