@@ -1,9 +1,13 @@
+
 #include "../Useful.cpp"
 import sys
 sys.path.append("../")
 import Useful as us
 sys.path.append("../Procesamiento")
 import pil2 as pil
+from math import ceil,floor
+import numpy as np
+
 A = []
 B = []
 
@@ -11,6 +15,8 @@ def peso(matchings):
     global A
     global B
     suma_total=0
+    if len(matchings)==0:
+        return 0
     t_a = matchings[0][0]
     t_b = matchings[0][1]
     tempa = A[t_a].longitud
@@ -89,8 +95,8 @@ def MIN_MATCHING(a, b):
     ret1 = greedy_min()
     
     ret2 = peso(ret1)
-    ret3 = us.proporcionaliad(ret1,A,B)
-    ret = (ret1 , ret2,ret3)
+    ret3 = us.GetSubMatchings(ret1,A,B)
+    ret = (ret1, ret2, ret3)
     return ret
 
 
@@ -98,47 +104,113 @@ if __name__ == "__main__":
     
     imgPath =  "../../Images/Abdullah.jpeg"
     imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
-    matriz01 = pil.convert(imgPath,0.2,0.6,0.2)
-    matriz02 = pil.convert(imgPath2,0.2,0.6,0.2)
     img1 =pil.getImagenRGB(imgPath)
     img2 =pil.getImagenRGB(imgPath2)
+    matriz01 = pil.convert(img1,0.2,0.6,0.2)
+    matriz02 = pil.convert(img2,0.2,0.6,0.2)
+    for i in matriz01:
+        for j in i:
+            print(j,end=" ")
+        print("")
+
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")
+    for i in matriz02:
+        for j in i:
+            print(j,end=" ")
+        print("")    
     row11 = pil.getRow(img1,0)
     row12 = pil.getRow(img2,0)
     
-
-
     #a = []; 
     a = matriz01[0]
     #b = []; 
     b = matriz02[0]
     #us.Menu(a,b)
     result = MIN_MATCHING(a,b)
+    matchings=result[2]
+    antimatchings=us.GetAntiMatching(matchings)
 
+    
     for v in result[0]: 
         print("(" + str(v[0])  + "," + str(v[1]) + ") ",end = " ")
 
     print("\n " + str(result[1]))
     
-    for submatching in result[2]: 
-        submatching.printear()
-    print("")
-    print("")
-    print("")
-    print("")
-    print("")
+    for submatching in matchings: 
+        submatching.getProporcionalidad()
+        submatching.printear2()
+    print("-------------------------------------------------------wtf")
+    #matchings[len(matchings)-1].printear3()
 
+    for submatching in antimatchings:
+        submatching.getProporcionalidad()
+        submatching.printear2()
+    print("-----------------------------------------")
     matrix=[]
     matrix.append(row11)
-    for i in range(us.Num_IMG):
+
+    # Sacamos el diferencial entre un pixel de la imagen b y uno de la imagen a entre i iteraciones 
+    for i in range(us.Num_IMG-1):
         lista= []
         for j in range(len(row11)):
+            init=[]
             R = row11[j][0]+ (float(i+1)/float(us.Num_IMG))* (row12[j][0]-row11[j][0])
             G = row11[j][1]+ (float(i+1)/float(us.Num_IMG))* (row12[j][1]-row11[j][1])
-            B = row11[j][1]+ (float(i+1)/float(us.Num_IMG))* (row12[j][2]-row11[j][2])
-            lista.append((R,G,B))
+            B = row11[j][2]+ (float(i+1)/float(us.Num_IMG))* (row12[j][2]-row11[j][2])
+            init.append((R,G,B))
+            lista.append(init)
         matrix.append(lista)
     
-    for i in range(us.Num_IMG+1):
-        for j in range(len(row11)):
-            print(matrix[i][j][0],end=" ")
+    # Agregamos los demas pixeles a la lista 
+    
+    for j in range(len(matchings)):
+        proporcionalidades=matchings[j].proporcionalidad
+        if (matchings[j].isDivision()): 
+            for index in range(len(proporcionalidades)):
+                inicio1= proporcionalidades[index][0]
+                end1 = proporcionalidades[index][1]
+                inicio2 =float(matchings[j].subB[index].start)
+                end2 =float(matchings[j].subB[index].end)
+                tamano_total=ceil(end1)-floor(inicio1)
+                #hacer el calculo para cada iteracion
+                for k in range(us.Num_IMG-1):
+                    initK = inicio1 + (k+1)*(inicio2-inicio1)/float(us.Num_IMG)
+                    endK = end1 + (k+1)*(end2-end1)/float(us.Num_IMG)
+                    long_pixel_K = (endK-initK)/float(tamano_total)
+                    for t in np.arange(initK,endK,long_pixel_K):
+                        rango = long_pixel_K/float(matchings[j].subB[index].longitud)
+                        cont = floor(inicio2)
+                        cont2 = t
+                        for pixel in range(floor(t),ceil(t+long_pixel_K),1):
+                            if pixel > cont2 + rango: 
+                                cont = cont + 1
+                                cont2 = cont2 + rango
+                            print(initK)
+                            print(cont)
+                            R = int(row11[floor(initK)][0] + (float(k+1)/float(us.Num_IMG))* (row12[cont][0]-row11[floor(initK)][0]))
+                            G = int(row11[floor(initK)][1] + (float(k+1)/float(us.Num_IMG))* (row12[cont][1]-row11[floor(initK)][1]))
+                            B = int(row11[floor(initK)][2] + (float(k+1)/float(us.Num_IMG))* (row12[cont][2]-row11[floor(initK)][2]))
+                            matrix[k+1][pixel].append((R,G,B))
+        
+    
+
+    for i in range(us.Num_IMG):
+        for j in range(len(row11)-1):
+            print(str(matrix[i][j]),end=" ")
         print("")

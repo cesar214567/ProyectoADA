@@ -62,14 +62,14 @@ def SaveMatrix(matrix, filepath):
         f.write(temporal)
     f.close()
 
-def convert(imagen, R, G, B):
-    image = Image.open(imagen)
-    width, height = image.size
+def convert(image, R, G, B):
+    #image = Image.open(imagen)
+    #width, height = image.size
     ConvertedMatrix01 = []
     
-    for y in range(height):
+    for x in range(height):
         array01 = []
-        for x in range(width):
+        for y in range(width):
             RGB = image.getpixel((x,y))
             Gris = int(RGB[0]*R + RGB[1]*G + RGB[2]*B)
             #Politica si el gris es 1 o 0 
@@ -83,13 +83,13 @@ def convert(imagen, R, G, B):
         
 def getImagenRGB(path):
     image = Image.open(path)
-    image = image.resize((height,width))
-    return image 
+    image2 = image.resize((height,width))
+    return image2 
 
-def getRow(Image,row): 
+def getRow(image,row): 
     retorno=[] 
     for iterator in range(width):
-        retorno.append(Image.getpixel((row,iterator)))
+        retorno.append(image.getpixel((row,iterator)))
     return retorno
 
 if __name__ == "__main__":

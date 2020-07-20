@@ -1,4 +1,7 @@
 import random 
+import sys
+sys.path.append("../Procesamiento")
+import pil2 as pil
 #from math import floor,ceil
 Num_IMG=5
 
@@ -13,32 +16,54 @@ class submatching():
 		self.subA=[]
 		self.subB=[]
 		self.proporcionalidad=[]
+	
 	def isDivision(self):
-		return len(subA)==1
+		return len(self.subA)==1
+	
 	def printear(self): 
 		print("primer array")
 
 		for i in self.subA:
-			print(i.longitud,end=" ")
+			print("("+str(i.start)+","+str(i.end)+")",end=" ")
 		print("")
 		for i in self.subB:
-			print(i.longitud,end=" ")
+			print("("+str(i.start)+","+str(i.end)+")",end=" ")
 		print("")
+
+	def printear2(self):
+		print("PROPORCIONALIDADES ")
+		for i in self.proporcionalidad:
+			print("("+str(i[0])+","+str(i[1])+")")
+
+	def printear3(self):
+		print("ultimo bit")
+		print(self.subA[len(self.subA)-1].end)
+		print(self.subB[len(self.subB)-1].end)
+
+
 	def getProporcionalidad(self):
 		if self.isDivision():
-			sumA=subA[0].longitud
+			sumA=float(self.subA[0].longitud)
 			sumB=0.0
-			for i in subB:
+			k = 0.0
+			for i in self.subB:
 				sumB+=float(i.longitud)
-			for i in subB:
-				proporcionalidad.append(i.longitud/sumB)
+			for i in self.subB:
+				prop =  sumA*(float(i.longitud) /float(sumB))
+				rango= [self.subA[0].start + k, self.subA[0].start + k + prop-0.05]
+				self.proporcionalidad.append(rango)
+				k = k + prop
 		else:
-			sumB=subB[0].longitud
+			sumB=float(self.subB[0].longitud)
 			sumA=0.0
-			for i in subA:
+			k=0.0
+			for i in self.subA:
 				sumA+=float(i.longitud)
-			for i in subA:
-				proporcionalidad.append(i.longitud/sumA)
+			for i in self.subA:
+				prop = sumB*(float(i.longitud)/float(sumA))
+				rango = [self.subB[0].start + k, self.subB[0].start + k + prop-0.05]
+				self.proporcionalidad.append(rango)
+				k=k+prop
 
 
 def ObtenerBloques(array):
@@ -105,7 +130,10 @@ def ImprimirMatriz(matrix):
         print("")
     print("")
 	
-def proporcionaliad(matchings,A,B):
+def GetSubMatchings(matchings,A,B):
+	if len(matchings)==0:
+		array_vacio =[]
+		return array_vacio
 	t_a = matchings[0][0]
 	t_b = matchings[0][1]
 	submatchings=[]
@@ -126,6 +154,45 @@ def proporcionaliad(matchings,A,B):
 			SubMatching.subB.append(B[t_b])
 	submatchings.append(SubMatching)
 	return submatchings
+
+
+def GetAntiMatching(submatchings):
+	i,j = 0,0
+	antiMatchings = []
+	if len(submatchings) == 0:
+		Bloque1 = bloque(0,pil.width,pil.width-1)
+		Bloque2 = bloque(0,pil.width,pil.width-1)
+		subMatch = submatching()
+		subMatch.subA.append(Bloque1)
+		subMatch.subB.append(Bloque2)
+		antiMatchings.append(subMatch)
+		return antiMatchings
+
+	for submatch in submatchings:	
+		k = submatch.subA[0].start
+		l = submatch.subB[0].start	
+		if i - k != 0 and j - l != 0:
+			Bloque1 = bloque(i,k-1,k-i)
+			Bloque2 = bloque(j,l-1,l-j)
+			subMatch = submatching()
+			subMatch.subA.append(Bloque1)
+			subMatch.subB.append(Bloque2)
+
+			antiMatchings.append(subMatch)
+
+		i = submatch.subA[len(submatch.subA)-1].end +1
+		j = submatch.subB[len(submatch.subB)-1].end +1 
+		
+	if i !=pil.width  and j !=pil.width :
+		Bloque1 = bloque(i,pil.width,pil.width-1-i)
+		Bloque2 = bloque(j,pil.width,pil.width-1-j)
+		subMatch = submatching()
+		subMatch.subA.append(Bloque1)
+		subMatch.subB.append(Bloque2)
+		antiMatchings.append(subMatch)
+
+	return antiMatchings
+
 
 if __name__ == "__main__":
 	A=[]
