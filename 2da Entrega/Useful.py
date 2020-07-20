@@ -2,8 +2,10 @@ import random
 import sys
 sys.path.append("../Procesamiento")
 import pil2 as pil
-#from math import floor,ceil
-Num_IMG=5
+from math import floor,ceil
+import numpy as np
+
+Num_IMG=10
 
 class bloque():
 	def __init__(self,start,end,longitud):
@@ -50,7 +52,7 @@ class submatching():
 				sumB+=float(i.longitud)
 			for i in self.subB:
 				prop =  sumA*(float(i.longitud) /float(sumB))
-				rango= [self.subA[0].start + k, self.subA[0].start + k + prop-0.05]
+				rango= [self.subA[0].start + k, self.subA[0].start + k + prop-0.001]
 				self.proporcionalidad.append(rango)
 				k = k + prop
 		else:
@@ -61,7 +63,7 @@ class submatching():
 				sumA+=float(i.longitud)
 			for i in self.subA:
 				prop = sumB*(float(i.longitud)/float(sumA))
-				rango = [self.subB[0].start + k, self.subB[0].start + k + prop-0.05]
+				rango = [self.subB[0].start + k, self.subB[0].start + k + prop-0.001]
 				self.proporcionalidad.append(rango)
 				k=k+prop
 
@@ -131,9 +133,9 @@ def ImprimirMatriz(matrix):
     print("")
 	
 def GetSubMatchings(matchings,A,B):
-	if len(matchings)==0:
+	if len(matchings)==0 or len(A)==0 or len(B)==0:
 		array_vacio =[]
-		return array_vacio
+		return array_vacio		
 	t_a = matchings[0][0]
 	t_b = matchings[0][1]
 	submatchings=[]
@@ -192,6 +194,106 @@ def GetAntiMatching(submatchings):
 		antiMatchings.append(subMatch)
 
 	return antiMatchings
+
+def generarMatrizPorLinea(matchings,antimatchings,row11,row12):
+	matrix= []
+	matrix.append(row11)
+
+	# Sacamos el diferencial entre un pixel de la imagen b y uno de la imagen a entre i iteraciones 
+	for i in range(Num_IMG-1):
+		lista= []
+		for j in range(len(row11)):
+			init=[]
+			R = round(row11[j][0]+ (float(i+1)/float(Num_IMG))* (row12[j][0]-row11[j][0]))
+			G = round(row11[j][1]+ (float(i+1)/float(Num_IMG))* (row12[j][1]-row11[j][1]))
+			B = round(row11[j][2]+ (float(i+1)/float(Num_IMG))* (row12[j][2]-row11[j][2]))
+			init.append((R,G,B))
+			lista.append(init)
+		matrix.append(lista)
+    
+	colorearIfMatching(matchings,matrix,row11,row12)
+	colorearIfMatching(antimatchings,matrix,row11,row12)
+	matrix.append(row12)
+	sacar_promedio(matrix,len(row11))
+	return matrix
+
+def colorearIfMatching(matchings,matrix,row11,row12):	
+	# Agregamos los demas pixeles a la lista 
+	for j in range(len(matchings)):
+		proporcionalidades=matchings[j].proporcionalidad
+		if (matchings[j].isDivision()): 
+			for index in range(len(proporcionalidades)):
+				inicio1= proporcionalidades[index][0]
+				end1 = proporcionalidades[index][1]
+				inicio2 =float(matchings[j].subB[index].start)
+				end2 =float(matchings[j].subB[index].end)
+				tamano_total=ceil(end1)-floor(inicio1)
+				#hacer el calculo para cada iteracion
+				for k in range(Num_IMG-1):
+					initK = inicio1 + (k+1)*(inicio2-inicio1)/float(Num_IMG)
+					endK = end1 + (k+1)*(end2-end1)/float(Num_IMG)
+					long_pixel_K = (endK-initK)/float(tamano_total)
+					for t in np.arange(initK,endK,long_pixel_K):
+						rango = long_pixel_K/float(matchings[j].subB[index].longitud)
+						cont = floor(inicio2)
+						cont2 = t
+						for pixel in range(floor(t),ceil(t+long_pixel_K),1):
+							if pixel > cont2 + rango: 
+								cont = cont + 1
+								cont2 = cont2 + rango
+							R = round(row11[floor(t)][0] + (float(k+1)/float(Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
+							G = round(row11[floor(t)][1] + (float(k+1)/float(Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
+							B = round(row11[floor(t)][2] + (float(k+1)/float(Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
+							matrix[k+1][pixel].append((R,G,B))
+		else:
+			for index in range(len(proporcionalidades)):
+				inicio1 = float(matchings[j].subA[index].start)
+				end1 = float(matchings[j].subA[index].end)
+				inicio2 = proporcionalidades[index][0]
+				end2 = proporcionalidades[index][1]
+				tamano_total= ceil(end2)-floor(inicio2)
+				for k in range(Num_IMG-2,0,-1): ##esto va en sentido inverso, de abajo a arriba
+					initK = inicio2 +(k+1)*(inicio1-inicio2)/float(Num_IMG)
+					endK = end2 + (k+1)*(end1-end2)/float(Num_IMG)
+					long_pixel_K = (endK-initK)/float(tamano_total)
+					for t in np.arange(initK,endK,long_pixel_K):
+						rango = long_pixel_K/float(matchings[j].subA[index].longitud)
+						cont = floor(inicio1)
+						cont2 = t
+						for pixel in range (floor(t),ceil(t+long_pixel_K),1):
+							if pixel >cont2+rango:
+								cont = cont+1 
+								cont2=cont2+rango
+							R = round(row11[floor(t)][0] + (float(k+1)/float(Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
+							G = round(row11[floor(t)][1] + (float(k+1)/float(Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
+							B = round(row11[floor(t)][2] + (float(k+1)/float(Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
+							matrix[k+1][pixel].append((R,G,B))
+                            
+    
+
+    #for i in range(Num_IMG):
+    #    for j in range(len(row11)):
+    #        print(str(matrix[i][j]),end=" ")
+    #    print("")
+
+    
+def sacar_promedio(matrix,width):
+	for i in range(1,Num_IMG,1):
+		for j in range(width):
+			sumR = 0
+			sumG = 0
+			sumB = 0
+			for iter in matrix[i][j]:
+				sumR = sumR + iter[0]
+				sumG = sumG + iter[1]
+				sumB = sumB + iter[2]
+			sumR = round(sumR/len(matrix[i][j]))
+			sumG = round(sumG/len(matrix[i][j]))
+			sumB = round(sumB/len(matrix[i][j]))
+			matrix[i][j] = (sumR,sumG,sumB)
+
+
+
 
 
 if __name__ == "__main__":

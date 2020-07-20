@@ -67,9 +67,12 @@ def convert(image, R, G, B):
     #width, height = image.size
     ConvertedMatrix01 = []
     
-    for x in range(height):
+    #for x in range(height):
+    for y in range(height):
         array01 = []
-        for y in range(width):
+        #for y in range(width):
+        for x in range(width):
+        
             RGB = image.getpixel((x,y))
             Gris = int(RGB[0]*R + RGB[1]*G + RGB[2]*B)
             #Politica si el gris es 1 o 0 
@@ -78,19 +81,34 @@ def convert(image, R, G, B):
             else:
                 array01.append(0)
         ConvertedMatrix01.append(array01)
-
     return ConvertedMatrix01
         
 def getImagenRGB(path):
     image = Image.open(path)
-    image2 = image.resize((height,width))
+    #image2 = image.resize((height,width))
+    image2 = image.resize((width,height))
     return image2 
 
 def getRow(image,row): 
     retorno=[] 
-    for iterator in range(width):
-        retorno.append(image.getpixel((row,iterator)))
+    #for iterator in range(width):
+    for y in range(width):
+        retorno.append(image.getpixel((y,row)))
     return retorno
+
+def ResultadoK(imagen,matrix):
+    #imagen = imagen.resize((len(matrix),width))
+    imagen = imagen.resize((width,len(matrix)))
+    for y in range(len(matrix)):
+        for x in range(width):
+            imagen.putpixel((x,y),matrix[y][x])
+    imagen.show()
+
+def ArmarImagen(imagen,matrix,K,directorio): 
+    for y in range(height):
+        for x in range(width):
+            imagen.putpixel((x,y),matrix[K][y][x])
+    imagen.save(directorio+"imagenIntermedia"+str(K+1)+".png")
 
 if __name__ == "__main__":
     imgPath =  "../../Images/Abdullah.jpeg"
