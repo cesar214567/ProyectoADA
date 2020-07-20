@@ -203,11 +203,34 @@ if __name__ == "__main__":
                                 cont2 = cont2 + rango
                             print(initK)
                             print(cont)
-                            R = int(row11[floor(initK)][0] + (float(k+1)/float(us.Num_IMG))* (row12[cont][0]-row11[floor(initK)][0]))
-                            G = int(row11[floor(initK)][1] + (float(k+1)/float(us.Num_IMG))* (row12[cont][1]-row11[floor(initK)][1]))
-                            B = int(row11[floor(initK)][2] + (float(k+1)/float(us.Num_IMG))* (row12[cont][2]-row11[floor(initK)][2]))
+                            R = int(row11[floor(t)][0] + (float(k+1)/float(us.Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
+                            G = int(row11[floor(t)][1] + (float(k+1)/float(us.Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
+                            B = int(row11[floor(t)][2] + (float(k+1)/float(us.Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
                             matrix[k+1][pixel].append((R,G,B))
-        
+        else:
+            for index in range(len(proporcionalidades)):
+                inicio1 = float(matchings[j].subA[index].start)
+                end1 = float(matchings[j].subA[index].end)
+                inicio2 = proporcionalidades[index][0]
+                end2 = proporcionalidades[index][1]
+                tamano_total= ceil(end2)-floor(inicio2)
+                for k in range(us.Num_IMG-1,0,-1): ##esto va en sentido inverso, de abajo a arriba
+                    initK = inicio2 +(k+1)*(inicio1-inicio2)/float(us.Num_IMG)
+                    endK = end2 + (k+1)*(end1-end2)/float(us.Num_IMG)
+                    long_pixel_K = (endK-initK)/float(tamano_total)
+                    for t in np.arange(initK,endK,long_pixel_K):
+                        rango = long_pixel_K/float(matchings[j].subA[index].longitud)
+                        cont = floor(inicio1)
+                        cont2 = t
+                        for pixel in range (floor(t),ceil(t+long_pixel_K),1):
+                            if pixel >cont2+rango:
+                                cont = cont+1 
+                                cont2=cont2+rango
+                            R = int(row11[floor(t)][0] + (float(k+1)/float(us.Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
+                            G = int(row11[floor(t)][1] + (float(k+1)/float(us.Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
+                            B = int(row11[floor(t)][2] + (float(k+1)/float(us.Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
+                            matrix[k+1][pixel].append((R,G,B))
+                            
     
 
     for i in range(us.Num_IMG):
