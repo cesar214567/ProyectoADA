@@ -1,13 +1,15 @@
 
 #include "../Useful.cpp"
-import sys
+from shutil import rmtree
+import sys,os
 sys.path.append("../")
 import Useful as us
 sys.path.append("../Procesamiento")
 from math import ceil,floor
 import numpy as np
 import pil2 as pil
-
+sys.path.append("../Animacion")
+from animacion import MostrarAnimacion
 A = []
 B = []
 
@@ -102,7 +104,6 @@ def MIN_MATCHING(a, b):
 
 
 if __name__ == "__main__":
-    
     imgPath =  "../../Images/Abdullah.jpeg"
     imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
     img1 =pil.getImagenRGB(imgPath)
@@ -134,8 +135,16 @@ if __name__ == "__main__":
         #fila de la otra imagen
         for j in range(len(MEGA_MATRIX)):
             MEGA_MATRIX[j].append(matrix[j])
-    for i in range(us.Num_IMG+1):
-        pil.ArmarImagen(img2,MEGA_MATRIX,i,"../../Images/")    
     
+    directorio = "../../Images/IntermediasGreedy/"
+    try: 
+        rmtree(directorio)
+    except:
+        pass
+    os.makedirs(directorio)
+    for i in range(us.Num_IMG+1):
+        pil.ArmarImagen(img2,MEGA_MATRIX,i,directorio)    
+    
+    MostrarAnimacion()
 
    
