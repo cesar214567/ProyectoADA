@@ -14,10 +14,12 @@ def MostrarAnimacion():
     pygame.display.set_caption('Proyecto ADA')
     SURFACE = pygame.display.set_mode((WIDTH, HEIGHT))
     cont = 1
+   
     CLOCK = pygame.time.Clock()
     while True:  # main loop that runs the game            
         SURFACE.fill(WHITE)
         filename = DirectorioGreedy+"imagenIntermedia"+ str(cont)+".png"
+        print(filename)
         convertedImage = pygame.image.load(filename).convert()
         SURFACE.blit(convertedImage,(0,0))
         pygame.display.update()

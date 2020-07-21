@@ -5,7 +5,7 @@ import pil2 as pil
 from math import floor,ceil
 import numpy as np
 
-Num_IMG=10
+Num_IMG=30
 
 class bloque():
 	def __init__(self,start,end,longitud):
@@ -290,7 +290,7 @@ def sacar_promedio(matrix,width):
 			sumR = round(sumR/len(matrix[i][j]))
 			sumG = round(sumG/len(matrix[i][j]))
 			sumB = round(sumB/len(matrix[i][j]))
-			matrix[i][j] = (sumR,sumG,sumB)
+			matrix[i][j] = (sumR,sumG,sumB,255)
 
 
 
