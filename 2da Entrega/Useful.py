@@ -49,7 +49,10 @@ class submatching():
 			sumB=0.0
 			k = 0.0
 			for i in self.subB:
+				#print("algun dato tien i.longitud= "+str(i.longitud))
 				sumB+=float(i.longitud)
+			#print("sumB es: "+str(sumB))
+			#print("len(self.subB) es: "+str(len(self.subB)))
 			for i in self.subB:
 				prop =  sumA*(float(i.longitud) /float(sumB))
 				rango= [self.subA[0].start + k, self.subA[0].start + k + prop-0.001]
@@ -162,8 +165,8 @@ def GetAntiMatching(submatchings):
 	i,j = 0,0
 	antiMatchings = []
 	if len(submatchings) == 0:
-		Bloque1 = bloque(0,pil.width,pil.width-1)
-		Bloque2 = bloque(0,pil.width,pil.width-1)
+		Bloque1 = bloque(0,pil.width-1,pil.width)
+		Bloque2 = bloque(0,pil.width-1,pil.width)
 		subMatch = submatching()
 		subMatch.subA.append(Bloque1)
 		subMatch.subB.append(Bloque2)
@@ -175,7 +178,13 @@ def GetAntiMatching(submatchings):
 		l = submatch.subB[0].start	
 		if i - k != 0 and j - l != 0:
 			Bloque1 = bloque(i,k-1,k-i)
+			if Bloque1.longitud==0:
+				print("NANI")
+				exit()
 			Bloque2 = bloque(j,l-1,l-j)
+			if Bloque2.longitud==0:
+				print("NANI")
+				exit()
 			subMatch = submatching()
 			subMatch.subA.append(Bloque1)
 			subMatch.subB.append(Bloque2)
@@ -186,8 +195,14 @@ def GetAntiMatching(submatchings):
 		j = submatch.subB[len(submatch.subB)-1].end +1 
 		
 	if i !=pil.width  and j !=pil.width :
-		Bloque1 = bloque(i,pil.width,pil.width-1-i)
-		Bloque2 = bloque(j,pil.width,pil.width-1-j)
+		Bloque1 = bloque(i,pil.width-1,pil.width-i)
+		Bloque2 = bloque(j,pil.width-1,pil.width-j)
+		if Bloque1.longitud==0:
+				print("NANI2")
+				exit()
+		if Bloque2.longitud==0:
+				print("NANI2")
+				exit()
 		subMatch = submatching()
 		subMatch.subA.append(Bloque1)
 		subMatch.subB.append(Bloque2)
@@ -226,6 +241,9 @@ def colorearIfMatching(matchings,matrix,row11,row12):
 			for index in range(len(proporcionalidades)):
 				inicio1= proporcionalidades[index][0]
 				end1 = proporcionalidades[index][1]
+				#print("j is: "+str(j)+" where indexes are from: "+str(len(matchings)))
+				#print("index is : "+str(index)+" where indexes are from "+str(len(matchings[j].subB)))
+				#print("len(proporcionalidades) is: "+str(len(proporcionalidades)))
 				inicio2 =float(matchings[j].subB[index].start)
 				end2 =float(matchings[j].subB[index].end)
 				tamano_total=ceil(end1)-floor(inicio1)
@@ -233,19 +251,28 @@ def colorearIfMatching(matchings,matrix,row11,row12):
 				for k in range(Num_IMG-1):
 					initK = inicio1 + (k+1)*(inicio2-inicio1)/float(Num_IMG)
 					endK = end1 + (k+1)*(end2-end1)/float(Num_IMG)
-					long_pixel_K = (endK-initK)/float(tamano_total)
+					long_pixel_K = (endK-initK)/float(tamano_total) 
 					for t in np.arange(initK,endK,long_pixel_K):
+						print("index is: "+str(index))
+						print("len(subB) is: "+str(len(matchings[j].subB)))
 						rango = long_pixel_K/float(matchings[j].subB[index].longitud)
 						cont = floor(inicio2)
 						cont2 = t
-						for pixel in range(floor(t),ceil(t+long_pixel_K),1):
+						#print("endK es: " +str(endK))
+						#print("floor(t) es: "+str(t)+" LONG_PIXEL ES: "+str(long_pixel_K))
+						for pixel in range(floor(t),floor(t+long_pixel_K),1):
 							if pixel > cont2 + rango: 
 								cont = cont + 1
 								cont2 = cont2 + rango
 							R = round(row11[floor(t)][0] + (float(k+1)/float(Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
 							G = round(row11[floor(t)][1] + (float(k+1)/float(Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
 							B = round(row11[floor(t)][2] + (float(k+1)/float(Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
-							matrix[k+1][pixel].append((R,G,B))
+							#print("llego aca1")
+							print("K es: "+str(k))
+							#print("pixel es: "+str(pixel))
+							if (pixel>=800):
+								continue
+							matrix[k+1][pixel-1].append((R,G,B))
 		else:
 			for index in range(len(proporcionalidades)):
 				inicio1 = float(matchings[j].subA[index].start)
@@ -268,7 +295,8 @@ def colorearIfMatching(matchings,matrix,row11,row12):
 							R = round(row11[floor(t)][0] + (float(k+1)/float(Num_IMG))* (row12[cont][0]-row11[floor(t)][0]))
 							G = round(row11[floor(t)][1] + (float(k+1)/float(Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
 							B = round(row11[floor(t)][2] + (float(k+1)/float(Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
-							matrix[k+1][pixel].append((R,G,B))
+							#print("llego aca2")
+							matrix[k+1][pixel-1].append((R,G,B))
                             
     
 

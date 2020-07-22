@@ -11,7 +11,7 @@ sumaBloquesB = []
 
 A = []
 B = []
-SubMatchingsOPT = []
+TuplasOPT = []
 
 
 def GetMatchDivision(i, m, n):
@@ -83,40 +83,37 @@ def DynamicProgramming(x, y):
     return Matrix[x][y]
 
 
-def GetSubMatching(OPT):
-    global SubMatchingsOPT
+def GetTuplas(OPT):
     
     if(OPT[0] == 0):
-        subMatching= us.submatching()
-        subMatching.subA.append(A[OPT[0]])
+        #subMatching= us.submatching()
+        #subMatching.subA.append(A[OPT[0]])
         for j in range(0, OPT[1]+1):
-            subMatching.subB.append(B[j])
-            #TuplasOPT.append([OPT[0], j])
-        SubMatchingsOPT.append(subMatching)
+            #subMatching.subB.append(B[j])
+            TuplasOPT.append([OPT[0], j])
+        #SubMatchingsOPT.append(subMatching)
     elif(OPT[1] == 0):
-        subMatching= us.submatching()
-        subMatching.subB.append(B[OPT[1]])
+        #subMatching= us.submatching()
+        #subMatching.subB.append(B[OPT[1]])
         for i in range(0, OPT[0]+1):
-            subMatching.subA.append(A[i])
-            #TuplasOPT.append([i, OPT[1]])
-        SubMatchingsOPT.append(subMatching)
+            #subMatching.subA.append(A[i])
+            TuplasOPT.append([i, OPT[1]])
+        #SubMatchingsOPT.append(subMatching)
     else:
         SubProblem = minSubProblem[OPT]
-        GetSubMatching(SubProblem)
-        subMatching =us.submatching()
+        GetTuplas(SubProblem)
+        #subMatching =us.submatching()
         if(SubProblem[0] + 1 == OPT[0]):
-            subMatching.subA.append(A[OPT[0]])
+            #subMatching.subA.append(A[OPT[0]])
             for j in range(SubProblem[1]+1, OPT[1]+1):
-                subMatching.subB.append(B[j])
-                #TuplasOPT.append([OPT[0], j])
+                #subMatching.subB.append(B[j])
+                TuplasOPT.append([OPT[0], j])
         else:
-            subMatching.subB.append(B[OPT[1]])
+            #subMatching.subB.append(B[OPT[1]])
             for i in range(SubProblem[0]+1, OPT[0]+1):
-                subMatching.subA.append(A[i])
-                
-                #TuplasOPT.append([i, OPT[1]])
-        SubMatchingsOPT.append(subMatching)
-
+                #subMatching.subA.append(A[i])
+                TuplasOPT.append([i, OPT[1]])
+        #SubMatchingsOPT.append(subMatching)
 def InicializarSumaBloques():
     global sumaBloquesA
     global sumaBloquesB
@@ -141,7 +138,7 @@ def InicializarMatrix():
         Matrix[i] = [0]*len(B)
 
 def Inicializar():
-    SubMatchingsOPT.clear()
+    TuplasOPT.clear()
     minSubProblem.clear()
     InicializarSumaBloques()
     InicializarMatrix()
@@ -157,6 +154,6 @@ def MIN_MATCHING(a, b):
     else:
         Inicializar()
         result = DynamicProgramming(len(A)-1, len(B)-1)
-        GetSubMatching((len(A)-1, len(B)-1))
+        GetTuplas((len(A)-1, len(B)-1))
         #return result
 

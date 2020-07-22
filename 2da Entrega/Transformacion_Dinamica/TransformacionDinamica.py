@@ -49,13 +49,13 @@ if __name__ == "__main__":
         a = matriz01[i]
         b = matriz02[i]
         dp.MIN_MATCHING(a,b)
-        matchings =dp.SubMatchingsOPT
-        #matchings = result[2]
+        matchings=us.GetSubMatchings(dp.TuplasOPT,dp.A,dp.B)
+        #matchings =dp.SubMatchingsOPT
         antimatchings=us.GetAntiMatching(matchings)
         for submatching in matchings:
-            submatching.getProporcionalidad
+            submatching.getProporcionalidad()
         for submatching in antimatchings:
-            submatching.getProporcionalidad
+            submatching.getProporcionalidad()
         matrix=us.generarMatrizPorLinea(matchings,antimatchings,row11,row12)
         #fila original
         #iter1
