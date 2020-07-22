@@ -27,10 +27,10 @@ def TransformacionDinamicaMejorada(matrixA, matrixB):
 
 if __name__ == "__main__":
     
-    #imgPath =  "../../Images/Abdullah.jpeg"
-    #imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
-    imgPath =  "../../Images/Ernesto.jpeg"
-    imgPath2 = "../../Images/anonymous.jpg"
+    imgPath =  "../../Images/Abdullah.jpeg"
+    imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
+    #imgPath =  "../../Images/Ernesto.jpeg"
+    #imgPath2 = "../../Images/anonymous.jpg"
     
     
     img1 =pil.getImagenRGB(imgPath)
@@ -49,8 +49,8 @@ if __name__ == "__main__":
         a = matriz01[i]
         b = matriz02[i]
         idp.MIN_MATCHING(a,b)
-        matchings=idp.SubMatchingsOPT
-        #matchings = result[2]
+        matchings=us.GetSubMatchings(idp.TuplasOPT,idp.A,idp.B)
+        #matchings =dp.SubMatchingsOPT
         antimatchings=us.GetAntiMatching(matchings)
         for submatching in matchings:
             submatching.getProporcionalidad()

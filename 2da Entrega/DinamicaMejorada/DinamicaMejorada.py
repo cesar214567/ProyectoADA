@@ -11,7 +11,7 @@ sumaBloquesB = []
 
 A = []
 B = []
-SubMatchingsOPT = []
+TuplasOPT = []
 
 u = 0.0
 
@@ -84,37 +84,24 @@ def DynamicProgramming(x, y):
     return Matrix[x][y]
 
 
-def GetSubMatching(OPT):
-    global SubMatchingsOPT
+
+def GetTuplas(OPT):
     if(OPT[0] == 0):
-        subMatching= us.submatching()
         for j in range(0, OPT[1]+1):
-            subMatching.subA.append(A[OPT[0]])
-            subMatching.subB.append(B[j])
-            #TuplasOPT.append([OPT[0], j])
-        SubMatchingsOPT.append(subMatching)
+            TuplasOPT.append([OPT[0], j])
     elif(OPT[1] == 0):
-        subMatching= us.submatching()
         for i in range(0, OPT[0]+1):
-            subMatching.subA.append(A[i])
-            subMatching.subB.append(B[OPT[1]])
-            #TuplasOPT.append([i, OPT[1]])
-        SubMatchingsOPT.append(subMatching)
+            TuplasOPT.append([i, OPT[1]])
     else:
         SubProblem = minSubProblem[OPT]
-        GetSubMatching(SubProblem)
-        subMatching =us.submatching()
+        GetTuplas(SubProblem)
         if(SubProblem[0] + 1 == OPT[0]):
             for j in range(SubProblem[1]+1, OPT[1]+1):
-                subMatching.subA.append(A[OPT[0]])
-                subMatching.subB.append(B[j])
-                #TuplasOPT.append([OPT[0], j])
+                TuplasOPT.append([OPT[0], j])
         else:
             for i in range(SubProblem[0]+1, OPT[0]+1):
-                subMatching.subA.append(A[i])
-                subMatching.subB.append(B[OPT[1]])
-                #TuplasOPT.append([i, OPT[1]])
-        SubMatchingsOPT.append(subMatching)
+                TuplasOPT.append([i, OPT[1]])
+                
 
 def InicializarSumaBloques():
     global sumaBloquesA
@@ -144,7 +131,7 @@ def InicializarU():
     u = float(sumaBloquesA[len(A)-1])/float(sumaBloquesB[len(B)-1])
 
 def Inicializar():
-    SubMatchingsOPT.clear()
+    TuplasOPT.clear()
     minSubProblem.clear()
     InicializarSumaBloques()
     InicializarU()
@@ -161,7 +148,7 @@ def MIN_MATCHING(a, b):
     else:
         Inicializar()
         result = DynamicProgramming(len(A)-1, len(B)-1)
-        GetSubMatching((len(A)-1, len(B)-1))
+        GetTuplas((len(A)-1, len(B)-1))
         
         return result
 

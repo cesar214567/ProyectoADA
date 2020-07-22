@@ -178,13 +178,7 @@ def GetAntiMatching(submatchings):
 		l = submatch.subB[0].start	
 		if i - k != 0 and j - l != 0:
 			Bloque1 = bloque(i,k-1,k-i)
-			if Bloque1.longitud==0:
-				print("NANI")
-				exit()
 			Bloque2 = bloque(j,l-1,l-j)
-			if Bloque2.longitud==0:
-				print("NANI")
-				exit()
 			subMatch = submatching()
 			subMatch.subA.append(Bloque1)
 			subMatch.subB.append(Bloque2)
@@ -197,12 +191,6 @@ def GetAntiMatching(submatchings):
 	if i !=pil.width  and j !=pil.width :
 		Bloque1 = bloque(i,pil.width-1,pil.width-i)
 		Bloque2 = bloque(j,pil.width-1,pil.width-j)
-		if Bloque1.longitud==0:
-				print("NANI2")
-				exit()
-		if Bloque2.longitud==0:
-				print("NANI2")
-				exit()
 		subMatch = submatching()
 		subMatch.subA.append(Bloque1)
 		subMatch.subB.append(Bloque2)
@@ -253,8 +241,8 @@ def colorearIfMatching(matchings,matrix,row11,row12):
 					endK = end1 + (k+1)*(end2-end1)/float(Num_IMG)
 					long_pixel_K = (endK-initK)/float(tamano_total) 
 					for t in np.arange(initK,endK,long_pixel_K):
-						print("index is: "+str(index))
-						print("len(subB) is: "+str(len(matchings[j].subB)))
+						#print("index is: "+str(index))
+						#print("len(subB) is: "+str(len(matchings[j].subB)))
 						rango = long_pixel_K/float(matchings[j].subB[index].longitud)
 						cont = floor(inicio2)
 						cont2 = t
@@ -268,7 +256,7 @@ def colorearIfMatching(matchings,matrix,row11,row12):
 							G = round(row11[floor(t)][1] + (float(k+1)/float(Num_IMG))* (row12[cont][1]-row11[floor(t)][1]))
 							B = round(row11[floor(t)][2] + (float(k+1)/float(Num_IMG))* (row12[cont][2]-row11[floor(t)][2]))
 							#print("llego aca1")
-							print("K es: "+str(k))
+							#print("K es: "+str(k))
 							#print("pixel es: "+str(pixel))
 							if (pixel>=800):
 								continue
