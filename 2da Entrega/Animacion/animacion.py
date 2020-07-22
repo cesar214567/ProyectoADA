@@ -2,14 +2,12 @@ import sys,pygame
 sys.path.append("../")
 from Useful import Num_IMG
 from pygame.locals import *
+from shutil import rmtree
 WIDTH    = 800
 HEIGHT   = 600
 WHITE = (255, 255, 255)
-DirectorioDinamica = ""
-DirectorioGreedy = "../../Images/IntermediasGreedy/"
-DirectorioMejorada = ""
+def MostrarAnimacion(Directorio):
 
-def MostrarAnimacion():
     pygame.init()
     pygame.display.set_caption('Proyecto ADA')
     SURFACE = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -18,7 +16,7 @@ def MostrarAnimacion():
     CLOCK = pygame.time.Clock()
     while True:  # main loop that runs the game            
         SURFACE.fill(WHITE)
-        filename = DirectorioGreedy+"imagenIntermedia"+ str(cont)+".png"
+        filename = Directorio+"imagenIntermedia"+ str(cont)+".png"
         print(filename)
         convertedImage = pygame.image.load(filename).convert()
         SURFACE.blit(convertedImage,(0,0))
@@ -26,6 +24,10 @@ def MostrarAnimacion():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
+                try:
+                    rmtree(Directorio)
+                except:
+                    pass
                 sys.exit()
             if event.type == KEYDOWN:
                 cont = 1

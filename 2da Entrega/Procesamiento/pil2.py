@@ -105,9 +105,14 @@ def ResultadoK(imagen,matrix):
     imagen.show()
 
 def ArmarImagen(imagen,matrix,K,directorio): 
+    try:
+        os.makedirs(directorio)
+    except:
+        pass
     for y in range(height):
         for x in range(width):
             imagen.putpixel((x,y),matrix[K][y][x])
+    
     imagen.save(directorio+"imagenIntermedia"+str(K+1)+".png")
 
 if __name__ == "__main__":
