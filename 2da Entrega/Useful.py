@@ -214,6 +214,7 @@ def generarMatrizPorLinea(matchings,antimatchings,row11,row12):
 	colorearIfMatching(matchings,matrix,row11,row12)
 	colorearIfMatching(antimatchings,matrix,row11,row12)
 	matrix.append(row12)
+	contador=0
 	sacar_promedio(matrix,len(row11))
 	return matrix
 

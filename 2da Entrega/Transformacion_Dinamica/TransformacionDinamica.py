@@ -27,10 +27,10 @@ def TransformacionDinamica(matrixA, matrixB):
 
 if __name__ == "__main__":
     
-    #imgPath =  "../../Images/Abdullah.jpeg"
-    #imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
-    imgPath =  "../../Images/Ernesto.jpeg"
-    imgPath2 = "../../Images/anonymous.jpg"
+    imgPath =  "../../Images/Abdullah.jpeg"
+    imgPath2 = "../../Images/Arnold_Schwarzenegger.jpg"
+    #imgPath =  "../../Images/Ernesto.jpeg"
+    #imgPath2 = "../../Images/anonymous.jpg"
     
     
     img1 =pil.getImagenRGB(imgPath)

@@ -85,18 +85,19 @@ def DynamicProgramming(x, y):
 
 def GetSubMatching(OPT):
     global SubMatchingsOPT
+    
     if(OPT[0] == 0):
         subMatching= us.submatching()
+        subMatching.subA.append(A[OPT[0]])
         for j in range(0, OPT[1]+1):
-            subMatching.subA.append(A[OPT[0]])
             subMatching.subB.append(B[j])
             #TuplasOPT.append([OPT[0], j])
         SubMatchingsOPT.append(subMatching)
     elif(OPT[1] == 0):
         subMatching= us.submatching()
+        subMatching.subB.append(B[OPT[1]])
         for i in range(0, OPT[0]+1):
             subMatching.subA.append(A[i])
-            subMatching.subB.append(B[OPT[1]])
             #TuplasOPT.append([i, OPT[1]])
         SubMatchingsOPT.append(subMatching)
     else:
@@ -104,14 +105,15 @@ def GetSubMatching(OPT):
         GetSubMatching(SubProblem)
         subMatching =us.submatching()
         if(SubProblem[0] + 1 == OPT[0]):
+            subMatching.subA.append(A[OPT[0]])
             for j in range(SubProblem[1]+1, OPT[1]+1):
-                subMatching.subA.append(A[OPT[0]])
                 subMatching.subB.append(B[j])
                 #TuplasOPT.append([OPT[0], j])
         else:
+            subMatching.subB.append(B[OPT[1]])
             for i in range(SubProblem[0]+1, OPT[0]+1):
                 subMatching.subA.append(A[i])
-                subMatching.subB.append(B[OPT[1]])
+                
                 #TuplasOPT.append([i, OPT[1]])
         SubMatchingsOPT.append(subMatching)
 
