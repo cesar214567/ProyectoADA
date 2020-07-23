@@ -104,8 +104,21 @@ def Show():
         sys.exit()
 
 def main():
-    Generar()
-    Show()
+    txt = '''Seleccionar:
+    1. Generar imagenes [1]
+    2. Mostrar [2]
+    3. Salir   [0]
+    Opcion -> '''
+    print(txt, end='')
+    op = int(input(""))
+    if(op == 1):
+        Generar()
+        Show()
+    elif(op == 2):
+        SelectNumImg()
+        Show()
+    else:
+        sys.exit()
 
 if __name__ == "__main__":
     main()

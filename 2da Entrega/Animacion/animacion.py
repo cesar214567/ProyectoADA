@@ -50,12 +50,13 @@ def MostrarAnimacion(Directorio):
         convertedImage = pygame.image.load(filename).convert()
         SURFACE.blit(convertedImage,(0,0))
         pygame.display.update()
+        print("cambio de imagen "+str(cont))
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN:
-                cont = 1
+                cont = 0
         CLOCK.tick(2)
         if(cont <= us.Num_IMG ):
             cont = cont + 1 
