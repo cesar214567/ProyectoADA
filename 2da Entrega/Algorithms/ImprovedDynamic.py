@@ -141,6 +141,8 @@ def MIN_MATCHING(a, b, GetSubmatching = False):
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
     if(len(A) == 0 or len(B) == 0):
+        if(GetSubmatching):
+            return us.GetSubMatchings(TuplasOPT, A, B)
         return 0
     else:
         Inicializar()

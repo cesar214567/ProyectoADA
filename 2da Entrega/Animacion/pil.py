@@ -63,14 +63,10 @@ def SaveMatrix(matrix, filepath):
     f.close()
 
 def convert(image, R, G, B):
-    #image = Image.open(imagen)
-    #width, height = image.size
     ConvertedMatrix01 = []
-    
-    #for x in range(height):
+
     for y in range(height):
         array01 = []
-        #for y in range(width):
         for x in range(width):
         
             RGB = image.getpixel((x,y))
@@ -85,19 +81,16 @@ def convert(image, R, G, B):
         
 def getImagenRGB(path):
     image = Image.open(path)
-    #image2 = image.resize((height,width))
     image2 = image.resize((width,height))
     return image2 
 
 def getRow(image,row): 
-    retorno=[] 
-    #for iterator in range(width):
+    retorno = []
     for y in range(width):
         retorno.append(image.getpixel((y,row)))
     return retorno
 
 def ResultadoK(imagen,matrix):
-    #imagen = imagen.resize((len(matrix),width))
     imagen = imagen.resize((width,len(matrix)))
     for y in range(len(matrix)):
         for x in range(width):

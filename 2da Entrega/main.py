@@ -6,6 +6,7 @@ import Algorithms.TrDynamic as Tdp
 import Algorithms.TrImprovedDynamic as Tidp
 import Animacion.animacion as ani
 import Animacion.pil as pil
+import Useful as us
 
 GreedyDirectory = "../Images/GreedyImages/"
 DynamicDirectory = "../Images/DpImages/"
@@ -35,8 +36,11 @@ def SelectAlgorithm(img1, img2, matrixA, matrixB):
     else:
         sys.exit()
 
+def SelectNumImg():
+    us.Num_IMG = int(input("Imagenes Intermedias: "))
+
 def SelectLUM(img1, img2):
-    txt = '''Seleccionar Algoritmo:
+    txt = '''Seleccionar escala de grises:
     1. LUM_601   [1]
     2. LUM_709   [2]
     3. LUM_240   [3]
@@ -58,13 +62,22 @@ def SelectLUM(img1, img2):
         matrixB = pil.LUM_240(img2)
         return (matrixA, matrixB)
     elif(op == 4):
-        matrixA = pil.LUM_input(img1)
-        matrixB = pil.LUM_input(img2)
+        while(True):
+            R = float(input("Ingrese el coeficiente de R: "))
+            G = float(input("Ingrese el coeficiente de G: "))
+            B = float(input("Ingrese el coeficiente de B: "))
+            if(R+G+B == 1):
+                matrixA = pil.convert(img1, R, G, B)
+                matrixB = pil.convert(img2, R, G, B)
+                break
+            else:
+                print("Los valores ingresados no son correctos, ingrese nuevamente.")
         return (matrixA, matrixB)
     else:
         sys.exit()
 
 def Generar():
+    SelectNumImg()
     imgPath =  "../Images/Abdullah.jpeg"
     imgPath2 = "../Images/Arnold_Schwarzenegger.jpg"
     img1 = pil.getImagenRGB(imgPath)

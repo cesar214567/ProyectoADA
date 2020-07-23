@@ -57,7 +57,7 @@ def MostrarAnimacion(Directorio):
             if event.type == KEYDOWN:
                 cont = 1
         CLOCK.tick(2)
-        if(cont <= Num_IMG ):
+        if(cont <= us.Num_IMG ):
             cont = cont + 1 
 
 if __name__ == "__main__":
