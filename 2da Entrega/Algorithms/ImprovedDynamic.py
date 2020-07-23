@@ -1,10 +1,11 @@
 import math
 import sys
+
 sys.path.append("../")
 import Useful as us
 
 Matrix = []
-minSubProblem = {}  # Para GetTuplas_1
+minSubProblem = {} 
 
 sumaBloquesA = []
 sumaBloquesB = []
@@ -24,16 +25,14 @@ def GetMatchDivision(i, m, n):
     suma = sumaBloquesB[n] - sumaBloquesB[m-1]
     return abs(float(A[i].longitud)/suma - u)
 
-
 def GetMatchGroup(r, s, j):
     if(r == s):
         return abs(A[r].longitud/float(B[j].longitud) - u)
     if(r == 0):
         return abs(sumaBloquesA[s]/float(B[j].longitud) - u)
+    
     suma = sumaBloquesA[s] - sumaBloquesA[r-1]
-
     return abs(suma/float(B[j].longitud) - u)
-
 
 def OPT_Result(i, j):
     global Matrix
@@ -73,7 +72,6 @@ def OPT_Result(i, j):
             Matrix[i][j] = min_resultl
             minSubProblem[i, j] = (i-1, indexMinDivision-1)
 
-
 def DynamicProgramming(x, y):
     for i in range(0, x):
         for j in range(0, y):
@@ -82,8 +80,6 @@ def DynamicProgramming(x, y):
     OPT_Result(x, y)
 
     return Matrix[x][y]
-
-
 
 def GetTuplas(OPT):
     if(OPT[0] == 0):
@@ -102,7 +98,6 @@ def GetTuplas(OPT):
             for i in range(SubProblem[0]+1, OPT[0]+1):
                 TuplasOPT.append([i, OPT[1]])
                 
-
 def InicializarSumaBloques():
     global sumaBloquesA
     global sumaBloquesB
@@ -117,7 +112,6 @@ def InicializarSumaBloques():
     for i in range(1, len(B)):
         sumaBloquesB.append(B[i].longitud + sumaBloquesB[i-1])
 
-
 def InicializarMatrix():
     global Matrix
     Matrix.clear()
@@ -130,14 +124,17 @@ def InicializarU():
     global u
     u = float(sumaBloquesA[len(A)-1])/float(sumaBloquesB[len(B)-1])
 
-def Inicializar():
+def Clean():
     TuplasOPT.clear()
     minSubProblem.clear()
+
+def Inicializar():
+    Clean()
     InicializarSumaBloques()
     InicializarU()
     InicializarMatrix()
 
-def MIN_MATCHING(a, b):
+def MIN_MATCHING(a, b, GetSubmatching = False):
     global A
     global B
 
@@ -149,26 +146,6 @@ def MIN_MATCHING(a, b):
         Inicializar()
         result = DynamicProgramming(len(A)-1, len(B)-1)
         GetTuplas((len(A)-1, len(B)-1))
-        
+        if(GetSubmatching):
+            return us.GetSubMatchings(TuplasOPT, A, B)
         return result
-
-
-if __name__ == "__main__":
-    #a = [0, 1 , 0 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1]
-    #b = [0, 0,  1 , 1 , 0 , 1 , 1, 0 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0]
-    # a = [1, 0, 0, 1, 1, 1, 0, 1, 0, 0]
-    # b = [0, 0, 1, 1, 0, 0, 0, 0, 0, 0]
-    a=[1,0,1,1,0,1,0]
-    b = [1,1,0,1,1,0,1]
-    #a = []
-    #b = []
-    #us.Menu(a, b)
-    print("OPTIMO: " + str(MIN_MATCHING(a, b)) + "\n")
-    print(u)
-    print("Tuplas: ")
-    for it in SubMatchingsOPT:
-        it.printear()
-    
-    #for it in TuplasOPT:
-    #    print("(" + str(it[0]) + "," + str(it[1]) + ")", end=' ')
-    #print("")

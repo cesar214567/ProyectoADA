@@ -1,10 +1,11 @@
 import math
 import sys
+
 sys.path.append("../")
 import Useful as us
 
 Matrix = []
-minSubProblem = {}  # Para GetTuplas_1
+minSubProblem = {}
 
 sumaBloquesA = []
 sumaBloquesB = []
@@ -12,7 +13,6 @@ sumaBloquesB = []
 A = []
 B = []
 TuplasOPT = []
-
 
 def GetMatchDivision(i, m, n):
     if(m == n):
@@ -23,16 +23,14 @@ def GetMatchDivision(i, m, n):
     suma = sumaBloquesB[n] - sumaBloquesB[m-1]
     return float(A[i].longitud)/suma
 
-
 def GetMatchGroup(r, s, j):
     if(r == s):
         return A[r].longitud/float(B[j].longitud)
     if(r == 0):
         return sumaBloquesA[s]/float(B[j].longitud)
+    
     suma = sumaBloquesA[s] - sumaBloquesA[r-1]
-
     return suma/float(B[j].longitud)
-
 
 def OPT_Result(i, j):
     global Matrix
@@ -72,7 +70,6 @@ def OPT_Result(i, j):
             Matrix[i][j] = min_resultl
             minSubProblem[i, j] = (i-1, indexMinDivision-1)
 
-
 def DynamicProgramming(x, y):
     for i in range(0, x):
         for j in range(0, y):
@@ -82,9 +79,7 @@ def DynamicProgramming(x, y):
 
     return Matrix[x][y]
 
-
 def GetTuplas(OPT):
-    
     if(OPT[0] == 0):
         for j in range(0, OPT[1]+1):
             TuplasOPT.append([OPT[0], j])
@@ -115,7 +110,6 @@ def InicializarSumaBloques():
     for i in range(1, len(B)):
         sumaBloquesB.append(B[i].longitud + sumaBloquesB[i-1])
 
-
 def InicializarMatrix():
     global Matrix
     Matrix.clear()
@@ -124,23 +118,28 @@ def InicializarMatrix():
     for i in range(0, len(A)):
         Matrix[i] = [0]*len(B)
 
-def Inicializar():
+def Clean():
     TuplasOPT.clear()
     minSubProblem.clear()
+
+def Inicializar():
+    Clean()
     InicializarSumaBloques()
     InicializarMatrix()
 
-def MIN_MATCHING(a, b):
+def MIN_MATCHING(a, b, GetSubmatching = False):
     global A
     global B
 
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
     if(len(A) == 0 or len(B) == 0):
+        Clean()
         return 0
     else:
         Inicializar()
         result = DynamicProgramming(len(A)-1, len(B)-1)
         GetTuplas((len(A)-1, len(B)-1))
-        #return result
-
+        if(GetSubmatching):
+            return us.GetSubMatchings(TuplasOPT, A, B)
+        return result

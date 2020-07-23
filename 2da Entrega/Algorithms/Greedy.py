@@ -1,19 +1,13 @@
-
-#include "../Useful.cpp"
 import sys
 sys.path.append("../")
 import Useful as us
-sys.path.append("../Procesamiento")
-from math import ceil,floor
-import numpy as np
-import pil2 as pil
 
 A = []
 B = []
+matchings = []
 
-def peso(matchings):
-    global A
-    global B
+def peso():
+    global A, B
     suma_total=0
     if len(matchings)==0:
         return 0
@@ -36,9 +30,8 @@ def peso(matchings):
     suma_total += tempa/tempb
     return suma_total
 
-
 def greedy_min():
-    matchings = []
+    global matchings
     i = 0
     j = 0
     cont_B = 0
@@ -83,23 +76,12 @@ def greedy_min():
             matchings.append([i,j])
             i += 1
 
-    return matchings
-    
-        
-def MIN_MATCHING(a, b):
-    global A
-    global B
+def MIN_MATCHING(a, b, GetSubmatching = False):
+    global A, B
     A = us.ObtenerBloques(a)
     B = us.ObtenerBloques(b)
-    
-    ret1 = greedy_min()
-    
-    #ret2 = peso(ret1)
-    ret3 = us.GetSubMatchings(ret1,A,B)
-    #ret = (ret1, ret2, ret3)
-    return ret3
-
-
-
-
-
+    matchings.clear()
+    greedy_min()
+    if(GetSubmatching):
+        return us.GetSubMatchings(matchings, A, B)
+    return peso()

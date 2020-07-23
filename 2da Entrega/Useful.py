@@ -1,11 +1,10 @@
 import random 
 import sys
-sys.path.append("../Procesamiento")
-import pil2 as pil
-from math import floor,ceil
+import Animacion.pil as pil
+from math import floor, ceil
 import numpy as np
 
-Num_IMG=30
+Num_IMG = 30
 
 class bloque():
 	def __init__(self,start,end,longitud):
@@ -70,7 +69,6 @@ class submatching():
 				self.proporcionalidad.append(rango)
 				k=k+prop
 
-
 def ObtenerBloques(array):
 	retorno= []
 	cont=0
@@ -101,7 +99,6 @@ def Cargar_random(vectorA,vectorB):
 		vectorB.append(random.randint(0,1))
 	print("el array A",vectorA)
 	print("el array B",vectorB)
-
 
 def Menu(vectorA,vectorB):
 	print("Elige una opcion: ")
@@ -159,7 +156,6 @@ def GetSubMatchings(matchings,A,B):
 			SubMatching.subB.append(B[t_b])
 	submatchings.append(SubMatching)
 	return submatchings
-
 
 def GetAntiMatching(submatchings):
 	i,j = 0,0
@@ -308,21 +304,3 @@ def sacar_promedio(matrix,width):
 			sumG = round(sumG/len(matrix[i][j]))
 			sumB = round(sumB/len(matrix[i][j]))
 			matrix[i][j] = (sumR,sumG,sumB,255)
-
-
-
-
-
-if __name__ == "__main__":
-	A=[]
-	B=[]
-	Menu(A,B)	
-	bloquesA = ObtenerBloques(A)
-	bloquesB = ObtenerBloques(B)
-	for i in bloquesA:
-		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud))
-	print("espacio")
-	for i in bloquesB:
-		print(str(i.start) +" "+str(i.end) +" "+str(i.longitud)) 
-
-

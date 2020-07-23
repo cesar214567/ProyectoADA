@@ -124,4 +124,3 @@ if __name__ == "__main__":
     #testB = LUM_709(imgPath, GrayImg=True, filepath="../../Images/testB.png")
     #testC = LUM_601(imgPath, GrayImg=True, filepath="../../Images/testC.png")
     #testD = LUM_input(imgPath)
-  
