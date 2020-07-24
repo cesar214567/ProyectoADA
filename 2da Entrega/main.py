@@ -78,8 +78,11 @@ def SelectLUM(img1, img2):
 
 def Generar():
     SelectNumImg()
-    imgPath =  "../Images/Abdullah.jpeg"
-    imgPath2 = "../Images/Arnold_Schwarzenegger.jpg"
+    #imgPath =  "../Images/Abdullah.jpeg"
+    #imgPath2 = "../Images/Arnold_Schwarzenegger.jpg"
+    imgPath =  "../Images/JoseMaria.jpeg"
+    imgPath2 = "../Images/Ernesto.jpeg"
+    
     img1 = pil.getImagenRGB(imgPath)
     img2 = pil.getImagenRGB(imgPath2)
     matriz01, matriz02 = SelectLUM(img1, img2)
